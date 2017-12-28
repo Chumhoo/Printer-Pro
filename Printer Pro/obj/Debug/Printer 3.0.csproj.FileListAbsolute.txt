@@ -1,0 +1,118 @@
+D:\Printer 3.0\Printer 3.0\Printer 3.0\bin\Debug\Printer 3.0.exe.config
+D:\Printer 3.0\Printer 3.0\Printer 3.0\bin\Debug\Printer 3.0.exe
+D:\Printer 3.0\Printer 3.0\Printer 3.0\bin\Debug\Printer 3.0.pdb
+D:\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Printer 3.0.csprojResolveAssemblyReference.cache
+D:\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Printer_3._0.Print.resources
+D:\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Printer_3._0.Startup.resources
+D:\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Printer_3._0.Properties.Resources.resources
+D:\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Printer 3.0.csproj.GenerateResource.Cache
+D:\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Printer 3.0.exe
+D:\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Printer 3.0.pdb
+D:\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Printer 3.0.csproj.ResolveComReference.cache
+D:\Printer 3.0\Printer 3.0\Printer 3.0\bin\Debug\Interop.MG17MotorLib.dll
+D:\Printer 3.0\Printer 3.0\Printer 3.0\bin\Debug\AxInterop.MG17MotorLib.dll
+D:\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17CommsLib.dll
+D:\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17CoreLib.dll
+D:\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17LoggerLib.dll
+D:\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17MotorLib.dll
+D:\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17NanoTrakLib.dll
+D:\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17PiezoLib.dll
+D:\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17SystemLib.dll
+D:\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17UtilsLib.dll
+D:\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\AxInterop.MG17MotorLib.dll
+E:\Projects\Bio-printing platform\Engineering\Printer 3.0\Printer 3.0\Printer 3.0\bin\Debug\Printer 3.0.exe.config
+E:\Projects\Bio-printing platform\Engineering\Printer 3.0\Printer 3.0\Printer 3.0\bin\Debug\Printer 3.0.exe
+E:\Projects\Bio-printing platform\Engineering\Printer 3.0\Printer 3.0\Printer 3.0\bin\Debug\Printer 3.0.pdb
+E:\Projects\Bio-printing platform\Engineering\Printer 3.0\Printer 3.0\Printer 3.0\bin\Debug\Interop.MG17MotorLib.dll
+E:\Projects\Bio-printing platform\Engineering\Printer 3.0\Printer 3.0\Printer 3.0\bin\Debug\AxInterop.MG17MotorLib.dll
+E:\Projects\Bio-printing platform\Engineering\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Printer 3.0.csprojResolveAssemblyReference.cache
+E:\Projects\Bio-printing platform\Engineering\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17CommsLib.dll
+E:\Projects\Bio-printing platform\Engineering\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17CoreLib.dll
+E:\Projects\Bio-printing platform\Engineering\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17LoggerLib.dll
+E:\Projects\Bio-printing platform\Engineering\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17MotorLib.dll
+E:\Projects\Bio-printing platform\Engineering\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17NanoTrakLib.dll
+E:\Projects\Bio-printing platform\Engineering\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17PiezoLib.dll
+E:\Projects\Bio-printing platform\Engineering\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17SystemLib.dll
+E:\Projects\Bio-printing platform\Engineering\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17UtilsLib.dll
+E:\Projects\Bio-printing platform\Engineering\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\AxInterop.MG17MotorLib.dll
+E:\Projects\Bio-printing platform\Engineering\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Printer 3.0.csproj.ResolveComReference.cache
+E:\Projects\Bio-printing platform\Engineering\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Printer_3._0.Print.resources
+E:\Projects\Bio-printing platform\Engineering\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Printer_3._0.Startup.resources
+E:\Projects\Bio-printing platform\Engineering\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Printer_3._0.Properties.Resources.resources
+E:\Projects\Bio-printing platform\Engineering\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Printer 3.0.csproj.GenerateResource.Cache
+E:\Projects\Bio-printing platform\Engineering\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Printer 3.0.exe
+E:\Projects\Bio-printing platform\Engineering\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Printer 3.0.pdb
+D:\original\Printer 3.0\Printer 3.0\Printer 3.0\bin\Debug\Printer 3.0.exe.config
+D:\original\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17CommsLib.dll
+D:\original\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17CoreLib.dll
+D:\original\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17LoggerLib.dll
+D:\original\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17MotorLib.dll
+D:\original\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17NanoTrakLib.dll
+D:\original\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17PiezoLib.dll
+D:\original\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17SystemLib.dll
+D:\original\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17UtilsLib.dll
+D:\original\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\AxInterop.MG17MotorLib.dll
+D:\original\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Printer 3.0.csproj.ResolveComReference.cache
+D:\original\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Printer 3.0.exe
+D:\original\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Printer 3.0.pdb
+D:\original\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Printer_3._0.Print.resources
+D:\original\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Printer_3._0.Startup.resources
+D:\original\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Printer_3._0.Properties.Resources.resources
+D:\original\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Printer 3.0.csproj.GenerateResource.Cache
+D:\original\Printer 3.0\Printer 3.0\Printer 3.0\bin\Debug\Printer 3.0.exe
+D:\original\Printer 3.0\Printer 3.0\Printer 3.0\bin\Debug\Printer 3.0.pdb
+D:\original\Printer 3.0\Printer 3.0\Printer 3.0\bin\Debug\Interop.MG17MotorLib.dll
+D:\original\Printer 3.0\Printer 3.0\Printer 3.0\bin\Debug\AxInterop.MG17MotorLib.dll
+D:\original\Printer 3.0\Printer 3.0\Printer 3.0\obj\Debug\Printer 3.0.csprojResolveAssemblyReference.cache
+C:\Users\Administrator\Desktop\Printer 3.0\Printer 3.0\obj\Debug\Printer 3.0.csprojResolveAssemblyReference.cache
+C:\Users\Administrator\Desktop\Printer 3.0\Printer 3.0\obj\Debug\Printer 3.0.csproj.ResolveComReference.cache
+C:\Users\Administrator\Desktop\Printer 3.0\Printer 3.0\obj\Debug\Printer_3._0.Print.resources
+C:\Users\Administrator\Desktop\Printer 3.0\Printer 3.0\obj\Debug\Printer_3._0.Startup.resources
+C:\Users\Administrator\Desktop\Printer 3.0\Printer 3.0\obj\Debug\Printer_3._0.Properties.Resources.resources
+C:\Users\Administrator\Desktop\Printer 3.0\Printer 3.0\obj\Debug\Printer 3.0.csproj.GenerateResource.Cache
+C:\Users\Administrator\Desktop\Printer 3.0\Printer 3.0\obj\Debug\Printer 3.0.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Desktop\Printer 3.0\Printer 3.0\obj\Debug\Printer 3.0.exe
+C:\Users\Administrator\Desktop\Printer 3.0\Printer 3.0\obj\Debug\Printer 3.0.pdb
+C:\Users\Administrator\Desktop\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17CommsLib.dll
+C:\Users\Administrator\Desktop\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17CoreLib.dll
+C:\Users\Administrator\Desktop\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17LoggerLib.dll
+C:\Users\Administrator\Desktop\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17MotorLib.dll
+C:\Users\Administrator\Desktop\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17NanoTrakLib.dll
+C:\Users\Administrator\Desktop\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17PiezoLib.dll
+C:\Users\Administrator\Desktop\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17SystemLib.dll
+C:\Users\Administrator\Desktop\Printer 3.0\Printer 3.0\obj\Debug\Interop.MG17UtilsLib.dll
+C:\Users\Administrator\Desktop\Printer 3.0\Printer 3.0\obj\Debug\AxInterop.MG17MotorLib.dll
+C:\Users\Administrator\Desktop\Printer 3.0\Printer 3.0\bin\Debug\Printer 3.0.exe.config
+C:\Users\Administrator\Desktop\Printer 3.0\Printer 3.0\bin\Debug\Printer 3.0.exe
+C:\Users\Administrator\Desktop\Printer 3.0\Printer 3.0\bin\Debug\Printer 3.0.pdb
+C:\Users\Administrator\Desktop\Printer 3.0\Printer 3.0\bin\Debug\Interop.MG17MotorLib.dll
+C:\Users\Administrator\Desktop\Printer 3.0\Printer 3.0\bin\Debug\AxInterop.MG17MotorLib.dll
+C:\Users\Administrator\Desktop\Printer 3.0\Printer 3.0\bin\Debug\CSkin.xml
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Interop.MG17CommsLib.dll
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Interop.MG17CoreLib.dll
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Interop.MG17LoggerLib.dll
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Interop.MG17MotorLib.dll
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Interop.MG17NanoTrakLib.dll
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Interop.MG17PiezoLib.dll
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Interop.MG17SystemLib.dll
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Interop.MG17UtilsLib.dll
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\AxInterop.MG17MotorLib.dll
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Printer 3.0.csproj.ResolveComReference.cache
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Printer_3._0.Console.resources
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Printer_3._0.DataGrid.resources
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Printer_3._0.Loader.resources
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Printer_3._0.MainForm.resources
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Printer_3._0.Properties.Resources.resources
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Printer 3.0.csproj.GenerateResource.Cache
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Printer 3.0.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\bin\Debug\Printer 3.0.exe.config
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\bin\Debug\Printer 3.0.exe
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\bin\Debug\Printer 3.0.pdb
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\bin\Debug\MetroFramework.Design.dll
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\bin\Debug\MetroFramework.dll
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\bin\Debug\MetroFramework.Fonts.dll
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\bin\Debug\Interop.MG17MotorLib.dll
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\bin\Debug\AxInterop.MG17MotorLib.dll
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Printer 3.0.csprojResolveAssemblyReference.cache
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Printer 3.0.exe
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Printer 3.0.pdb

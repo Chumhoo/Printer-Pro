@@ -1,0 +1,27 @@
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Interop.MG17CommsLib.dll
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Interop.MG17CoreLib.dll
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Interop.MG17LoggerLib.dll
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Interop.MG17MotorLib.dll
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Interop.MG17NanoTrakLib.dll
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Interop.MG17PiezoLib.dll
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Interop.MG17SystemLib.dll
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Interop.MG17UtilsLib.dll
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\AxInterop.MG17MotorLib.dll
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Printer Pro.csproj.ResolveComReference.cache
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Printer Pro.csproj.GenerateResource.Cache
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Printer Pro.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\bin\Debug\Printer Pro.exe.config
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\bin\Debug\Printer Pro.exe
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\bin\Debug\Printer Pro.pdb
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\bin\Debug\MetroFramework.Design.dll
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\bin\Debug\MetroFramework.dll
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\bin\Debug\MetroFramework.Fonts.dll
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\bin\Debug\Interop.MG17MotorLib.dll
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\bin\Debug\AxInterop.MG17MotorLib.dll
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Printer Pro.exe
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\Printer Pro.pdb
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\PrinterPro.Console.resources
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\PrinterPro.DataGrid.resources
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\PrinterPro.Loader.resources
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\PrinterPro.MainForm.resources
+C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\PrinterPro.Properties.Resources.resources
