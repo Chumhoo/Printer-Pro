@@ -1,23 +1,24 @@
 ﻿using System.Collections;
 
-namespace PrinterPro
+namespace PrinterPro 
 {
     public class Data
     {
-        public static string ExcelFileName, ExcelSafeFileName;
+        public static string ExcelFileName = "No File", ExcelSafeFileName = "No File";
 
-        public static int SolutionNumber;
-        public static int rowCount, colCount;
+        public static int channelNumber;
+        public static int rows, cols;
 
         public static int[] channel, frequency, pulsewidth;
         public static double[] xRelative, yRelative;
         public static double xStart, yStart;
         public static double xDistance, yDistance;
+        public static float idleAccn = 1000, workAccn = 20;
 
         public static ArrayList gridData = new ArrayList();
-        public static ArrayList sheetNames = new ArrayList();
+        public static ArrayList dataImages = new ArrayList();
 
-        public static ArrayList allGrids = new ArrayList();
+        public static ArrayList sheetNames = new ArrayList();
 
         // Printing Preferences
         public static double idleSpeed, workSpeed;
@@ -26,12 +27,12 @@ namespace PrinterPro
 
         public static void clear()
         {
-            ExcelFileName = null;
-            ExcelSafeFileName = null;
+            ExcelFileName = "No File";
+            ExcelSafeFileName = "No File";
 
-            SolutionNumber = 0;
-            rowCount = 0;
-            colCount = 0;
+            channelNumber = 0;
+            rows = 0;
+            cols = 0;
 
             channel = null;
             frequency = null;
@@ -40,8 +41,8 @@ namespace PrinterPro
             yRelative = null;
 
             gridData = new ArrayList();
+            dataImages = new ArrayList();
             sheetNames = new ArrayList();
-            allGrids = new ArrayList();
         }
     }
 }

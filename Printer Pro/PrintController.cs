@@ -13,51 +13,149 @@ namespace PrinterPro
 
         private float xMidRange, yMidRange;
         private static float lastX, lastY;
+        private static bool initialInPosition = true;
+
+        private const float Z_MAX = (float)93.5;
 
         public PrintController(Console console, SerialPort valve)
         {
             this.console = console;
             this.valve = valve;
 
-            xMidRange = console.MotorX.GetStageAxisInfo_MaxPos(0) / 2;
-            yMidRange = console.MotorY.GetStageAxisInfo_MaxPos(0) / 2;
+            xMidRange = console.getXAxisMax() / 2;
+            yMidRange = console.getYAxisMax() / 2;
         }
 
         public void eject()
         {
-            console.MotorX.GetPosition(0, ref lastX);
-            console.MotorY.GetPosition(0, ref lastY);
-            console.MotorX.SetVelParams(0, 0, 2000, (float)Data.idleSpeed);
-            console.MotorY.SetVelParams(0, 0, 2000, (float)Data.idleSpeed);
-            console.MotorX.SetAbsMovePos(0, xMidRange);
-            console.MotorX.MoveAbsolute(0, false);
-            console.MotorY.SetAbsMovePos(0, 0);
-            console.MotorY.MoveAbsolute(0, true);
+            console.getXPosition(ref lastX);
+            console.getYPosition(ref lastY);
+            console.setXVelParams(0, 2000, (float)Data.idleSpeed);
+            console.setYVelParams(0, 2000, (float)Data.idleSpeed);
+            console.setZVelParams(0, 10, 20);
+            console.setXAbsMovePos(xMidRange);
+            console.moveXAbsolute(false);
+            console.setYAbsMovePos(0);
+            console.moveYAbsolute(false);
+            console.setZAbsMovePos(60);
+            console.moveZAbsolute(true);
         }
 
         // Initial decides whether start from xStart/yStart or lastX/lastY
-        public void inPosition(bool initial)
+        public void inPosition()
         {
             float xStart, yStart;
-            if (initial)
+            if (initialInPosition)
             {
                 xStart = (float)Data.xStart;
                 yStart = (float)Data.yStart;
+                initialInPosition = false;
             }
             else
             {
                 xStart = lastX;
                 yStart = lastY;
             }
-            console.MotorX.SetVelParams(0, 0, 2000, (float)Data.idleSpeed);
-            console.MotorY.SetVelParams(0, 0, 2000, (float)Data.idleSpeed);
-            console.MotorX.SetAbsMovePos(0, xStart);
-            console.MotorX.MoveAbsolute(0, false);
-            console.MotorY.SetAbsMovePos(0, yStart);
-            console.MotorY.MoveAbsolute(0, true);
+            console.setXVelParams(0, 2000, (float)Data.idleSpeed);
+            console.setYVelParams(0, 2000, (float)Data.idleSpeed);
+            console.setZVelParams(0, 10, 10);
+            console.setXAbsMovePos(xStart);
+            console.moveXAbsolute(false);
+            console.setYAbsMovePos(yStart);
+            console.moveYAbsolute(false);
+            console.setZAbsMovePos(Z_MAX);
+            console.moveZAbsolute(true);
         }
 
-        public void beginPrint(EventHandler handler)
+        public void beginPrint(int mode, EventHandler finishPrintEventHandler, EventHandler eventFinish1Point)
+        {
+            if (mode == 0) beginInkjet(finishPrintEventHandler, eventFinish1Point);
+            else if (mode == 1) beginOnTheFLy(finishPrintEventHandler, eventFinish1Point);
+        }
+
+        public void beginOnTheFLy(EventHandler finishPrintEventHandler, EventHandler eventFinish1Point)
+        {
+            try
+            {
+                valve.Open();
+                valve.Close();
+            }
+            catch
+            {
+                return;
+            }
+
+            double xStart = Data.xStart, yStart = Data.yStart;
+            int arraySize = Data.cols * Data.rows;
+
+            ArrayList printArray = new ArrayList();
+            for (int j = 0; j < Data.rows; j++)
+            {
+                for (int k = 0; k < Data.cols; k++)
+                {
+                    printArray.Add(((ArrayList)((ArrayList)Data.gridData[0])[j])[k]);
+                }
+            }
+            int[] printCount = (int[])printArray.ToArray(typeof(int));
+
+            xStart += Data.xRelative[0];
+            yStart += Data.yRelative[0];
+
+
+            int currentXDisplay = 1;
+            int currentYDisplay = 1;
+            float accnBufferDistance = (float)(Data.workSpeed * Data.workSpeed / Data.workAccn / 2);
+            float accnBufferTime = (float)(Data.workSpeed / Data.workAccn * 1000);
+            valve.Open();
+            for (int i = 0; i < Data.rows; i++)
+            {
+                console.setXVelParams(0, Data.idleAccn, (float)Data.idleSpeed);
+                console.setXAbsMovePos((float)xStart - accnBufferDistance);
+                console.moveXAbsolute(true);
+                if (i != 0)
+                {
+                    console.setYVelParams(0, Data.idleAccn, (float)Data.idleSpeed);
+                    console.setYRelMoveDist(-(float)Data.yDistance);
+                    console.moveYRelative(true);
+                }
+                byte[] buffer = new byte[4];
+                buffer[0] = (byte)(ASCII_ZERO + Data.channel[0]);
+                buffer[1] = (byte)(ASCII_ZERO + Data.frequency[0]);
+                buffer[2] = (byte)(ASCII_ZERO + Data.cols);
+                buffer[3] = (byte)(ASCII_ZERO + Data.pulsewidth[0]);
+
+                console.setXVelParams(0, Data.workAccn, (float)Data.workSpeed);
+                console.setXAbsMovePos((float)xStart + (float)Data.xDistance * Data.cols + accnBufferDistance);
+                console.moveXAbsolute(false);
+
+                Thread.Sleep((int)accnBufferTime);
+                valve.Write(buffer, 0, 4);
+                byte[] buffer_receive = new byte[1];
+                while (buffer_receive[0] != (byte)'0')
+                {
+                    try { valve.Read(buffer_receive, 0, 1); }
+                    catch { }
+                }
+
+                for (int col = 0; col < Data.cols; col++)
+                {
+                    ArrayList args = new ArrayList();
+                    args.Add(i);
+                    args.Add(col);
+                    eventFinish1Point.Invoke(args, EventArgs.Empty);
+                }
+                // The following sleeping time saves the life of out-of-thread X Axis control. Without this compulsory
+                // delay, next absolute move will probably be omitted.
+                Thread.Sleep((int)(Data.xDistance * Data.cols / Data.workSpeed) * 1000 + (int)accnBufferTime);
+                Thread.Sleep(Data.waitTime);
+                currentXDisplay++;
+                currentYDisplay++;
+            }
+            valve.Close();
+            finishPrintEventHandler.Invoke(new object(), new EventArgs());
+        }
+
+        public void beginInkjet(EventHandler finishPrintEventHandler, EventHandler eventFinish1Point)
         {
             #region check valve port and send a message to active the port
             try
@@ -73,18 +171,18 @@ namespace PrinterPro
             #endregion
 
             double xStart = Data.xStart, yStart = Data.yStart;
-            int arraySize = Data.colCount * Data.rowCount;
+            int arraySize = Data.cols * Data.rows;
             #region Inkjet printing
 
             if (Data.selectedStyle == 0)
             {
                 #region Read print data
                 ArrayList printArray = new ArrayList();
-                for (int i = 0; i < Data.SolutionNumber; i++)
+                for (int i = 0; i < Data.channelNumber; i++)
                 {
-                    for (int j = 0; j < Data.rowCount; j++)
+                    for (int j = 0; j < Data.rows; j++)
                     {
-                        for (int k = 0; k < Data.colCount; k++)
+                        for (int k = 0; k < Data.cols; k++)
                         {
                             printArray.Add(((ArrayList)((ArrayList)Data.gridData[i])[j])[k]);
                         }
@@ -93,45 +191,45 @@ namespace PrinterPro
                 int[] printCount = (int[])printArray.ToArray(typeof(int));
                 #endregion
 
-                for (int channel = 0; channel < Data.SolutionNumber; channel++)
+                for (int channel = 0; channel < Data.channelNumber; channel++)
                 {
                     xStart += Data.xRelative[channel];
                     yStart += Data.yRelative[channel];
 
-                    console.MotorX.SetVelParams(0, 0, 2000, (float)Data.workSpeed);
-                    console.MotorY.SetVelParams(0, 0, 2000, (float)Data.workSpeed);
+                    console.setXVelParams(0, 2000, (float)Data.workSpeed);
+                    console.setYVelParams(0, 2000, (float)Data.workSpeed);
 
                     int currentXDisplay = 1;
                     int currentYDisplay = 1;
 
                     #region print one channel
                     valve.Open();
-                    for (int i = 0; i < Data.rowCount; i++)
+                    for (int i = 0; i < Data.rows; i++)
                     {
                         if (yStart + i * Data.yDistance >= 0 && yStart + i * Data.yDistance <= 220)
                         {
-                            console.MotorX.SetAbsMovePos(0, (float)xStart);
-                            console.MotorX.MoveAbsolute(0, true);
+                            console.setXAbsMovePos((float)xStart);
+                            console.moveXAbsolute(true);
                             if (i != 0)
                             {
-                                console.MotorY.SetRelMoveDist(0, -(float)Data.yDistance);
-                                console.MotorY.MoveRelative(0, true);
+                                console.setYRelMoveDist(-(float)Data.yDistance);
+                                console.moveYRelative(true);
                             }
-                            for (int j = 0; j < Data.colCount; j++)
+                            for (int j = 0; j < Data.cols; j++)
                             {
                                 if (xStart + j * Data.xDistance >= 0 && xStart + j * Data.xDistance <= 220)
                                 {
                                     if (j != 0)
                                     {
-                                        console.MotorX.SetRelMoveDist(0, (float)Data.xDistance);
-                                        console.MotorX.MoveRelative(0, true);
+                                        console.setXRelMoveDist((float)Data.xDistance);
+                                        console.moveXRelative(true);
                                     }
-                                    if (printCount[channel * arraySize + i * Data.colCount + j] != 0)
+                                    if (printCount[channel * arraySize + i * Data.cols + j] != 0)
                                     {
                                         byte[] buffer = new byte[4];
                                         buffer[0] = (byte)(ASCII_ZERO + Data.channel[channel]);
                                         buffer[1] = (byte)(ASCII_ZERO + Data.frequency[channel]);
-                                        buffer[2] = (byte)(ASCII_ZERO + printCount[channel * arraySize + i * Data.colCount + j]);
+                                        buffer[2] = (byte)(ASCII_ZERO + printCount[channel * arraySize + i * Data.cols + j]);
                                         buffer[3] = (byte)(ASCII_ZERO + Data.pulsewidth[channel]);
                                         valve.Write(buffer, 0, 4);
 
@@ -147,6 +245,10 @@ namespace PrinterPro
 
                                             }
                                         }
+                                        ArrayList args = new ArrayList();
+                                        args.Add(i);
+                                        args.Add(j);
+                                        eventFinish1Point.Invoke(args, EventArgs.Empty);
                                         Thread.Sleep(Data.waitTime);
                                     }
                                     currentXDisplay++;
@@ -169,7 +271,7 @@ namespace PrinterPro
                     xStart = Data.xStart;
                     yStart = Data.yStart;
                 }
-                handler.Invoke(new object(), new EventArgs());
+                finishPrintEventHandler.Invoke(new object(), new EventArgs());
             }
             #endregion
         }
@@ -178,6 +280,7 @@ namespace PrinterPro
         {
             console.MotorX.StopImmediate(0);
             console.MotorY.StopImmediate(0);
+            console.MotorZ.StopImmediate(0);
             if (valve.IsOpen)
             {
                 valve.Close();

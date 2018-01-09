@@ -22,5 +22,53 @@ namespace PrinterPro.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool X_Enable {
+            get {
+                return ((bool)(this["X_Enable"]));
+            }
+            set {
+                this["X_Enable"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Y_Enable {
+            get {
+                return ((bool)(this["Y_Enable"]));
+            }
+            set {
+                this["Y_Enable"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Z_Enable {
+            get {
+                return ((bool)(this["Z_Enable"]));
+            }
+            set {
+                this["Z_Enable"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int PrintMode {
+            get {
+                return ((int)(this["PrintMode"]));
+            }
+            set {
+                this["PrintMode"] = value;
+            }
+        }
     }
 }
