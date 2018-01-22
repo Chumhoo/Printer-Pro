@@ -8,7 +8,7 @@ using System.Threading;
 using System.IO.Ports;
 using System.IO;
 using System.Diagnostics;
-using System.Configuration;
+using System.Text.RegularExpressions;
 
 namespace PrinterPro
 {
@@ -18,13 +18,15 @@ namespace PrinterPro
 
         private enum PRINT_STATE { PRINTING, SUSPENDED, STOPPED };
         private enum EJECT_STATE { INITIAL, EJECTED, INPOSITION };
+        private enum CYCLE_STAGES { PRE, S1, S2, EXT };
         private PRINT_STATE printState = PRINT_STATE.STOPPED;
         private EJECT_STATE ejectState = EJECT_STATE.INITIAL;
 
         private const int ASCII_ZERO = 48;
         public ManualResetEvent pauseEvent = new ManualResetEvent(true);
         public ManualResetEvent stopEvent = new ManualResetEvent(true);
-        public SerialPort _serialPort = new SerialPort();
+        public SerialPort spAirValve = new SerialPort();
+        public SerialPort spHeater = new SerialPort();
         private Console console;
         private DataGrid dataGrid = new DataGrid();
         private FileLoader fileLoader = new FileLoader();
@@ -38,14 +40,18 @@ namespace PrinterPro
 
         private bool homeReady = false, fileReady = false, consoleReady = false;
 
-        public Thread threadPrint = null, threadConsole = null, threadFile = null, threadPositionMonitor = null;
+        private Thread threadPrint = null, threadConsole = null, threadFile = null;
+        private Thread threadPositionMonitor = null, threadTemperatureMonitor = null;
+
+        private long tempTime = 0;
+        private double temperature = 0;
         #endregion
 
 
         public MainForm()
         {
             InitializeComponent();
-            
+
             tabControl.SelectedIndex = 0;
             cbFromCurrent.Visible = false;
             btnOpenConsole.Enabled = false;
@@ -54,16 +60,13 @@ namespace PrinterPro
 
             graphicsXYStage = panelXYStage.CreateGraphics();
             graphicsFrequency = panelFrequency.CreateGraphics();
-
-            console = new Console(
-                Properties.Settings.Default.X_Enable,
-                Properties.Settings.Default.Y_Enable,
-                Properties.Settings.Default.Z_Enable);
-
-            togXAxis.Checked = Properties.Settings.Default.X_Enable;
-            togYAxis.Checked = Properties.Settings.Default.Y_Enable;
-            togZAxis.Checked = Properties.Settings.Default.Z_Enable;
+            
             cbPrintMode.SelectedIndex = Properties.Settings.Default.PrintMode;
+            cbChannel.SelectedIndex = 0;
+
+            togXAxis.Checked = PrinterPro.Properties.Settings.Default.X_Enable;
+            togYAxis.Checked = PrinterPro.Properties.Settings.Default.Y_Enable;
+            togZAxis.Checked = PrinterPro.Properties.Settings.Default.Z_Enable;
         }
 
         private void refreshValvePort()
@@ -77,7 +80,7 @@ namespace PrinterPro
             comAirValve.DataSource = ports;
             foreach (DataRow row in ports.Rows)
             {
-                if (row[0].ToString().Contains("USB Serial Port"))
+                if (row[0].ToString().Contains("COM4"))
                 {
                     comAirValve.SelectedIndex = ports.Rows.IndexOf(row);
                     connectValvePort();
@@ -88,11 +91,20 @@ namespace PrinterPro
         private void refreshHeaterPort()
         {
             //进行绑定  
-            this.comHeaterPort.DisplayMember = "Name";//控件显示的列名  
-            this.comHeaterPort.ValueMember = "ID";//控件值的列名  
+            comHeaterPort.DisplayMember = "Name";//控件显示的列名  
+            comHeaterPort.ValueMember = "ID";//控件值的列名  
 
             //通过WMI获取COM端口
-            this.comHeaterPort.DataSource = DeviceManager.MulGetHardwareInfo();
+            DataTable ports = DeviceManager.MulGetHardwareInfo();
+            comHeaterPort.DataSource = ports;
+            foreach (DataRow row in ports.Rows)
+            {
+                if (row[0].ToString().Contains("COM5"))
+                {
+                    comHeaterPort.SelectedIndex = ports.Rows.IndexOf(row);
+                    connectHeaterPort();
+                }
+            }
         }
 
         private void valvePort_Click(object sender, EventArgs e) { refreshValvePort(); }
@@ -100,30 +112,55 @@ namespace PrinterPro
 
         private void connectValvePort()
         {
-            _serialPort.PortName = comAirValve.SelectedValue.ToString();
-            _serialPort.BaudRate = 9600;
-            _serialPort.Parity = Parity.None;
-            _serialPort.DataBits = 8;
-            _serialPort.StopBits = StopBits.One;
-            _serialPort.Handshake = Handshake.None;
+            spAirValve.PortName = comAirValve.SelectedValue.ToString();
+            spAirValve.BaudRate = 9600;
+            spAirValve.Parity = Parity.None;
+            spAirValve.DataBits = 8;
+            spAirValve.StopBits = StopBits.One;
+            spAirValve.Handshake = Handshake.None;
             try
             {
-                if (_serialPort.IsOpen) _serialPort.Close();
-                _serialPort.Open();
+                if (!spAirValve.IsOpen) spAirValve.Open();
                 comAirValve.BackColor = Color.LightGreen;
                 byte[] buffer_init = new byte[4];
                 buffer_init[0] = ASCII_ZERO + 8;
                 buffer_init[1] = ASCII_ZERO + 10;
                 buffer_init[2] = ASCII_ZERO + 0;
                 buffer_init[3] = ASCII_ZERO + 2;
-                _serialPort.Write(buffer_init, 0, 4);
-                _serialPort.Close();
+                spAirValve.Write(buffer_init, 0, 4);
             }
             catch
             {
                 comAirValve.BackColor = Color.FromArgb(255, 192, 192);
             }
         }
+
+        private void connectHeaterPort()
+        {
+            spHeater.PortName = comHeaterPort.SelectedValue.ToString();
+            spHeater.BaudRate = 57600;
+            spHeater.Parity = Parity.None;
+            spHeater.DataBits = 8;
+            spHeater.StopBits = StopBits.One;
+            spHeater.Handshake = Handshake.None;
+            spHeater.ReadBufferSize = 2048;
+            try
+            {
+                if (!spHeater.IsOpen) spHeater.Open();
+                byte[] buffer_init = new byte[2];
+                buffer_init[0] = (byte)'w';
+                buffer_init[1] = (byte)'\r';
+                spHeater.Write(buffer_init, 0, 2);
+                spHeater.ReadLine();
+                comHeaterPort.BackColor = Color.LightGreen;
+                spHeater.Close();
+            }
+            catch
+            {
+                comHeaterPort.BackColor = Color.FromArgb(255, 192, 192);
+            }
+        }
+
         private void btnConnectValvePort_Click(object sender, EventArgs e)
         {
             connectValvePort();
@@ -135,7 +172,14 @@ namespace PrinterPro
             {
                 threadPositionMonitor.Abort();
             }
+            if (threadTemperatureMonitor != null && threadTemperatureMonitor.IsAlive)
+            {
+                threadTemperatureMonitor.Abort();
+            }
+            if (spHeater.IsOpen) spHeater.Close();
+            if (spAirValve.IsOpen) spAirValve.Close();
             console.EndCtrl();
+
             // MessageBox.Show("Bye!");
         }
 
@@ -150,8 +194,9 @@ namespace PrinterPro
 
         private void init_Console()
         {
-            if (console.StartCtrl(true, (delegate
-            {
+            if (console.StartCtrl(true, 
+            (delegate {
+                // Home compelete handler
                 readyPrint();
                 btnPrint.Enabled = false;
                 homeReady = true;
@@ -175,7 +220,7 @@ namespace PrinterPro
                     btnOpenConsole.Enabled = true;
                     btnPrint.Enabled = true;
                     btnEject.Enabled = true;
-                    printController = new PrintController(console, _serialPort);
+                    printController = new PrintController(console, spAirValve);
                 }));
             }
         }
@@ -197,6 +242,8 @@ namespace PrinterPro
             Data.yRelative = new double[Data.channelNumber];
             Data.frequency = new int[Data.channelNumber];
             Data.pulsewidth = new int[Data.channelNumber];
+            Data.channel = new int[1];
+            Data.channel[0] = Convert.ToInt32(cbChannel.SelectedIndex) + 1;
 
             for (int i = 0; i < Data.channelNumber; i++)
             {
@@ -225,6 +272,110 @@ namespace PrinterPro
             }
         }
 
+        private void temperatureMonitor()
+        {
+            // The reason I use try here is to prevent bug when closing the form. 
+            try
+            {
+                while (true)
+                {
+                    if (!spHeater.IsOpen)
+                    {
+                        spHeater.Open();
+                    }
+                    spHeater.WriteLine("t1");
+                    string line = spHeater.ReadLine();
+                    temperature = Convert.ToDouble(Regex.Matches(line, @"\d*\.\d*")[0].ToString());
+                    System.Windows.Forms.DataVisualization.Charting.DataPointCollection points = chartTemperature.Series[0].Points;
+                    Invoke((EventHandler)(delegate
+                    {
+                        if (points.Count > 1000)
+                        {
+                            points.RemoveAt(0);
+                            chartTemperature.Update();
+                        }
+                        points.AddXY(Math.Round((double)tempTime / 1000, 1), temperature);
+
+                        double minY = points.FindMinByValue().YValues[0], maxY = points.FindMaxByValue().YValues[0];
+                        // +10 is to preserve a minimum range
+                        double range = maxY - minY + 10;
+                        chartTemperature.ChartAreas[0].AxisY.Minimum = minY - range * 0.2;
+                        chartTemperature.ChartAreas[0].AxisY.Maximum = maxY + range * 0.2;
+
+                        lbTemp.Text = temperature.ToString();
+                    }));
+                    int interval = Convert.ToInt32(trackTempUpdate.Maximum - trackTempUpdate.Value);
+                    Thread.Sleep(interval);
+                    tempTime += interval;
+                }
+            }
+            catch { }
+        }
+
+        private void tempCommander(long setTime, int setTemp, long startTime)
+        {
+            spHeater.WriteLine("H" + setTime.ToString());
+            spHeater.WriteLine("S" + setTemp.ToString());
+            startTime = tempTime;
+            while (Math.Abs(temperature - setTemp) > 1) { }
+            while (tempTime - startTime <= setTime) { }
+        }
+
+        private void temperatureController()
+        {
+            CYCLE_STAGES stage = CYCLE_STAGES.PRE;
+            int setTemp = 0, setCycles = 0;
+            long startTime = 0, setTime = 0;
+
+            if (!spHeater.IsOpen)
+            {
+                spHeater.Open();
+            }
+            try
+            {
+                while (stage <= CYCLE_STAGES.EXT)
+                {
+                    switch (stage)
+                    {
+                        case CYCLE_STAGES.PRE: setTime = Convert.ToInt32(stagePRE_time.Text); setTemp = Convert.ToInt32(stagePRE_temp.Text); break;
+                        case CYCLE_STAGES.EXT: setTime = Convert.ToInt32(stageEXT_time.Text); setTemp = Convert.ToInt32(stageEXT_temp.Text); break;
+                    }
+
+                    if (stage == CYCLE_STAGES.PRE || stage == CYCLE_STAGES.EXT)
+                    {
+                        tempCommander(setTime, setTemp, tempTime);
+                        stage++;
+                    }
+                    else
+                    {
+                        if (stage++ == CYCLE_STAGES.S1)
+                        {
+                            setCycles = Convert.ToInt32(stage1_cycles.Text);
+                            for (int i = 0; i < setCycles; i++)
+                            {
+                                tempCommander(Convert.ToInt32(stage1_1_time.Text), Convert.ToInt32(stage1_1_temp.Text), tempTime);
+                                tempCommander(Convert.ToInt32(stage1_2_time.Text), Convert.ToInt32(stage1_2_temp.Text), tempTime);
+                                tempCommander(Convert.ToInt32(stage1_3_time.Text), Convert.ToInt32(stage1_3_temp.Text), tempTime);
+                            }
+                        }
+                        if (stage++ == CYCLE_STAGES.S2)
+                        {
+                            setCycles = Convert.ToInt32(stage2_cycles.Text);
+                            for (int i = 0; i < setCycles; i++)
+                            {
+                                tempCommander(Convert.ToInt32(stage2_1_time.Text), Convert.ToInt32(stage2_1_temp.Text), tempTime);
+                                tempCommander(Convert.ToInt32(stage2_2_time.Text), Convert.ToInt32(stage2_2_temp.Text), tempTime);
+                                tempCommander(Convert.ToInt32(stage2_3_time.Text), Convert.ToInt32(stage2_3_temp.Text), tempTime);
+                            }
+                        }
+                    }
+                }
+                spHeater.WriteLine("N1#100#1000#1000");
+                spHeater.WriteLine("B0");
+            }
+            catch { }
+        }
+
         private void positionMonitor()
         {
             StringFormat format = new StringFormat();
@@ -234,77 +385,83 @@ namespace PrinterPro
             while (true)
             {
                 Thread.Sleep(10);
-                console.getXPosition(ref x);
-                console.getYPosition(ref y);
-                Invoke((EventHandler)(delegate
+                try
                 {
-                    graphicsXYStage.Clear(Color.White);
-
-                    pbTarget.Location = new Point(
-                        (int)(x / console.getXAxisMax() * panelXYStage.Size.Width - pbTarget.Size.Width / 2.0),
-                        (int)((1 - y / console.getYAxisMax()) * panelXYStage.Size.Height - pbTarget.Size.Height / 2.0));
-                    if (printState == PRINT_STATE.STOPPED)
+                    console.getXPosition(ref x);
+                    console.getYPosition(ref y);
+                    Invoke((EventHandler)(delegate
                     {
-                        if (ejectState == EJECT_STATE.INPOSITION)
+                        graphicsXYStage.Clear(Color.White);
+
+                        pbTarget.Location = new Point(
+                            (int)(x / console.getXAxisMax() * panelXYStage.Size.Width - pbTarget.Size.Width / 2.0),
+                            (int)((1 - y / console.getYAxisMax()) * panelXYStage.Size.Height - pbTarget.Size.Height / 2.0));
+                        if (printState == PRINT_STATE.STOPPED)
                         {
-                            float dataWidth = (Data.cols - 1) * (float)Data.xDistance / console.getXAxisMax() * panelXYStage.Size.Width;
-                            float dataHeight = (Data.rows - 1) * (float)Data.yDistance / console.getYAxisMax() * panelXYStage.Size.Height;
-                            float bufferWidth = (float)(Data.workSpeed * Data.workSpeed / Data.workAccn / 2);
-                            float bufferWidthDisp = bufferWidth / console.getXAxisMax() * panelXYStage.Size.Width;
-                            Color printColor = new Color(), bufferColor = new Color();
-                            if ((console.getXAxisMax() - x <= (Data.xDistance * (Data.cols - 1) + bufferWidth))
-                                || (x - bufferWidth < 0)
-                                || (y <= (Data.yDistance * (Data.rows - 1))))
+                            if (ejectState == EJECT_STATE.INPOSITION)
                             {
-                                printColor = Color.FromArgb(255, 153, 153);
-                                bufferColor = Color.FromArgb(255, 153, 153);
+                                float dataWidth = (Data.cols - 1) * (float)Data.xDistance / console.getXAxisMax() * panelXYStage.Size.Width;
+                                float dataHeight = (Data.rows - 1) * (float)Data.yDistance / console.getYAxisMax() * panelXYStage.Size.Height;
+                                float bufferWidth = (float)(Data.workSpeed * Data.workSpeed / Data.workAccn / 2);
+                                float bufferWidthDisp = bufferWidth / console.getXAxisMax() * panelXYStage.Size.Width;
+                                Color printColor = new Color(), bufferColor = new Color();
+                                if ((console.getXAxisMax() - x <= (Data.xDistance * (Data.cols - 1) + bufferWidth))
+                                    || (x - bufferWidth < 0)
+                                    || (y <= (Data.yDistance * (Data.rows - 1))))
+                                {
+                                    printColor = Color.FromArgb(255, 153, 153);
+                                    bufferColor = Color.FromArgb(255, 153, 153);
+                                }
+                                else
+                                {
+                                    printColor = Color.FromArgb(153, 255, 153);
+                                    bufferColor = Color.FromArgb(255, 255, 153);
+                                }
+
+                                string hint = "(" + Math.Round(x, 2).ToString() + "," + Math.Round(y, 2).ToString() + ")";
+                                if (!fileReady)
+                                {
+                                    hint += " No Data";
+                                }
+                                else
+                                {
+                                    float fontSize = dataWidth / 300 * 14;
+                                    fontSize = fontSize < 5 ? 5 : fontSize;
+                                    graphicsXYStage.FillRectangle(new SolidBrush(printColor),
+                                    pbTarget.Location.X + pbTarget.Size.Width / 2,
+                                    pbTarget.Location.Y + pbTarget.Size.Height / 2, dataWidth, dataHeight);
+                                    graphicsXYStage.FillRectangle(new SolidBrush(bufferColor),
+                                    pbTarget.Location.X + pbTarget.Size.Width / 2 - bufferWidthDisp,
+                                    pbTarget.Location.Y + pbTarget.Size.Height / 2, bufferWidthDisp, dataHeight);
+                                    graphicsXYStage.FillRectangle(new SolidBrush(bufferColor),
+                                    pbTarget.Location.X + pbTarget.Size.Width / 2 + dataWidth,
+                                    pbTarget.Location.Y + pbTarget.Size.Height / 2, bufferWidthDisp, dataHeight);
+                                    graphicsXYStage.DrawString("PRINT AREA",
+                                    new Font("Arial", fontSize),
+                                    new SolidBrush(Color.Black),
+                                    new PointF(pbTarget.Location.X + dataWidth / 2, pbTarget.Location.Y + dataHeight / 2),
+                                    format);
+                                }
+                                graphicsXYStage.DrawString(hint,
+                                    new Font("Arial", 10),
+                                    new SolidBrush(Color.Black),
+                                    new PointF(pbTarget.Location.X, pbTarget.Location.Y - 15),
+                                    format);
                             }
-                            else
+                            else if (ejectState == EJECT_STATE.EJECTED)
                             {
-                                printColor = Color.FromArgb(153, 255, 153);
-                                bufferColor = Color.FromArgb(255, 255, 153);
+                                graphicsXYStage.DrawString("Please insert the chip.",
+                                    new Font("Arial", 16),
+                                    new SolidBrush(Color.Black),
+                                    panelXYStage.Size.Width / 2, panelXYStage.Size.Height / 2,
+                                    format);
                             }
-                            
-                            string hint = "(" + Math.Round(x, 2).ToString() + "," + Math.Round(y, 2).ToString() + ")";
-                            if (!fileReady)
-                            {
-                                hint += " No Data";
-                            }
-                            else
-                            {
-                                float fontSize = dataWidth / 300 * 14;
-                                fontSize = fontSize < 5 ? 5 : fontSize;
-                                graphicsXYStage.FillRectangle(new SolidBrush(printColor),
-                                pbTarget.Location.X + pbTarget.Size.Width / 2,
-                                pbTarget.Location.Y + pbTarget.Size.Height / 2, dataWidth, dataHeight);
-                                graphicsXYStage.FillRectangle(new SolidBrush(bufferColor),
-                                pbTarget.Location.X + pbTarget.Size.Width / 2 - bufferWidthDisp,
-                                pbTarget.Location.Y + pbTarget.Size.Height / 2, bufferWidthDisp, dataHeight);
-                                graphicsXYStage.FillRectangle(new SolidBrush(bufferColor),
-                                pbTarget.Location.X + pbTarget.Size.Width / 2 + dataWidth,
-                                pbTarget.Location.Y + pbTarget.Size.Height / 2, bufferWidthDisp, dataHeight);
-                                graphicsXYStage.DrawString("PRINT AREA",
-                                new Font("Arial", fontSize),
-                                new SolidBrush(Color.Black),
-                                new PointF(pbTarget.Location.X + dataWidth / 2, pbTarget.Location.Y + dataHeight / 2),
-                                format);
-                            }
-                            graphicsXYStage.DrawString(hint,
-                                new Font("Arial", 10),
-                                new SolidBrush(Color.Black),
-                                new PointF(pbTarget.Location.X, pbTarget.Location.Y - 15),
-                                format);
                         }
-                        else if (ejectState == EJECT_STATE.EJECTED)
-                        {
-                            graphicsXYStage.DrawString("Please insert the chip.",
-                                new Font("Arial", 16),
-                                new SolidBrush(Color.Black),
-                                panelXYStage.Size.Width / 2, panelXYStage.Size.Height / 2,
-                                format);
-                        }
-                    }
-                }));
+                    }));
+                }
+                catch {
+                    return;
+                }
             }
         }
 
@@ -552,46 +709,46 @@ namespace PrinterPro
             refreshFrequency();
         }
 
-        private void togXAxis_Click(object sender, EventArgs e)
-        {
-            if (togXAxis.Checked)
-            {
-                console.moveXHome();
-            }
-        }
-
-        private void togYAxis_Click(object sender, EventArgs e)
-        {
-            if (togYAxis.Checked)
-            {
-                console.moveYHome();
-            }
-        }
-
-        private void togZAxis_Click(object sender, EventArgs e)
-        {
-            if (togZAxis.Checked)
-            {
-                console.moveZHome();
-            }
-        }
-
         private void togXAxis_CheckedChanged(object sender, EventArgs e)
         {
-            Properties.Settings.Default.X_Enable = togXAxis.Checked;
-            Properties.Settings.Default.Save();
+            if (homeReady)
+            {
+                console.setXEnabled(togXAxis.Checked);
+                PrinterPro.Properties.Settings.Default.X_Enable = togXAxis.Checked;
+                PrinterPro.Properties.Settings.Default.Save();
+                if (togXAxis.Checked)
+                {
+                    console.moveXHome();
+                }
+            }
         }
 
         private void togYAxis_CheckedChanged(object sender, EventArgs e)
         {
-            Properties.Settings.Default.Y_Enable = togYAxis.Checked;
-            Properties.Settings.Default.Save();
+            if (homeReady)
+            {
+                console.setYEnabled(togYAxis.Checked);
+                PrinterPro.Properties.Settings.Default.Y_Enable = togYAxis.Checked;
+                PrinterPro.Properties.Settings.Default.Save();
+                if (togYAxis.Checked)
+                {
+                    console.moveYHome();
+                }
+            }
         }
 
         private void togZAxis_CheckedChanged(object sender, EventArgs e)
         {
-            Properties.Settings.Default.Z_Enable = togZAxis.Checked;
-            Properties.Settings.Default.Save();
+            if (homeReady)
+            {
+                console.setZEnabled(togZAxis.Checked);
+                PrinterPro.Properties.Settings.Default.Z_Enable = togZAxis.Checked;
+                PrinterPro.Properties.Settings.Default.Save();
+                if (togZAxis.Checked)
+                {
+                    console.moveZHome();
+                }
+            }
         }
 
         private void panelFrequency_Paint(object sender, PaintEventArgs e)
@@ -621,7 +778,38 @@ namespace PrinterPro
                 threadFile.Start();
             }
         }
-        
+
+        private void cbChannel_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            updatePreference();
+        }
+
+        private void btnConnectHeaterPort_Click(object sender, EventArgs e)
+        {
+            connectHeaterPort();
+        }
+
+        private void btnRunCycle_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnBeginCycle_Click(object sender, EventArgs e)
+        {
+            if (threadTemperatureMonitor != null && threadTemperatureMonitor.IsAlive)
+            {
+                threadTemperatureMonitor.Abort();
+                btnBeginCycle.Text = "Begin";
+            }
+            else
+            {
+                threadTemperatureMonitor = new Thread(temperatureMonitor);
+                threadTemperatureMonitor.Start();
+                btnBeginCycle.Text = "Stop";
+            }
+
+        }
+
         private void tbFrequency_TextChanged(object sender, EventArgs e)
         {
             if (tbFrequency.Text == "") tbFrequency.Text = "0";
@@ -706,12 +894,16 @@ namespace PrinterPro
         
         private void MainForm_Load(object sender, EventArgs e)
         {
-            threadConsole = new Thread(init_Console);
-            threadConsole.Start();
-
             refreshValvePort();
             refreshHeaterPort();
             refreshFrequency();
+
+            console = new Console(
+                PrinterPro.Properties.Settings.Default.X_Enable,
+                PrinterPro.Properties.Settings.Default.Y_Enable,
+                PrinterPro.Properties.Settings.Default.Z_Enable);
+            threadConsole = new Thread(init_Console);
+            threadConsole.Start();
         }
 
         // Open File Button Clicked

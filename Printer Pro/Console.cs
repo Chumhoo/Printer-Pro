@@ -19,6 +19,9 @@ namespace PrinterPro
             ZEnable = _ZEnable;
         }
 
+        public void setXEnabled(bool enabled) { XEnable = enabled; }
+        public void setYEnabled(bool enabled) { YEnable = enabled; }
+        public void setZEnabled(bool enabled) { ZEnable = enabled; }
         public float getXAxisMax() { if (!XEnable) return 0; else return xMax; }
         public float getYAxisMax() { if (!YEnable) return 0; else return yMax; }
         public float getZAxisMax() { if (!ZEnable) return 0; else return MotorZ.GetStageAxisInfo_MaxPos(0); }
@@ -41,19 +44,23 @@ namespace PrinterPro
         public void moveYRelative(bool wait) { if (YEnable) MotorY.MoveRelative(0, wait); }
         public void moveZRelative(bool wait) { if (ZEnable) MotorZ.MoveRelative(0, wait); }
 
+
         public bool StartCtrl(bool autoHome, EventHandler _homeCompleteHandler)
         {
             try
             {
                 MotorX.StartCtrl();
-                xMax = MotorX.GetStageAxisInfo_MaxPos(0);
                 MotorY.StartCtrl();
-                yMax = MotorY.GetStageAxisInfo_MaxPos(0);
                 MotorZ.StartCtrl();
+
+                xMax = MotorX.GetStageAxisInfo_MaxPos(0);
+                yMax = MotorY.GetStageAxisInfo_MaxPos(0);
+
+                // MotorX.EnableEventDlg(false);
 
                 if (autoHome)
                 {
-                    Thread.Sleep(50);
+                    Thread.Sleep(100);
                     MoveHome(_homeCompleteHandler);
                 }
                 return true;
