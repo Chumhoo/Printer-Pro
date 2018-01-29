@@ -42,8 +42,9 @@ namespace PrinterPro
 
         private Thread threadPrint = null, threadConsole = null, threadFile = null;
         private Thread threadPositionMonitor = null, threadTemperatureMonitor = null;
+        private Thread threadTemperatureController = null;
 
-        private long tempTime = 0;
+        private DateTime initialTime = DateTime.Now;
         private double temperature = 0;
         #endregion
 
@@ -99,7 +100,7 @@ namespace PrinterPro
             comHeaterPort.DataSource = ports;
             foreach (DataRow row in ports.Rows)
             {
-                if (row[0].ToString().Contains("COM5"))
+                if (row[0].ToString().Contains("COM7"))
                 {
                     comHeaterPort.SelectedIndex = ports.Rows.IndexOf(row);
                     connectHeaterPort();
@@ -168,6 +169,20 @@ namespace PrinterPro
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
+            try
+            {
+                if (spHeater.IsOpen)
+                {
+                    spHeater.WriteLine("N1#100#1000#1000");
+                    spHeater.ReadLine();
+                    spHeater.WriteLine("B0");
+                    spHeater.ReadLine();
+                    spHeater.Close();
+                }
+                if (spAirValve.IsOpen) spAirValve.Close();
+            }
+            catch { }
+
             if (threadPositionMonitor != null && threadPositionMonitor.IsAlive)
             {
                 threadPositionMonitor.Abort();
@@ -176,10 +191,8 @@ namespace PrinterPro
             {
                 threadTemperatureMonitor.Abort();
             }
-            if (spHeater.IsOpen) spHeater.Close();
-            if (spAirValve.IsOpen) spAirValve.Close();
+            
             console.EndCtrl();
-
             // MessageBox.Show("Bye!");
         }
 
@@ -284,7 +297,7 @@ namespace PrinterPro
                         spHeater.Open();
                     }
                     spHeater.WriteLine("t1");
-                    string line = spHeater.ReadLine();
+                    string line = spHeater.ReadLine();                   
                     temperature = Convert.ToDouble(Regex.Matches(line, @"\d*\.\d*")[0].ToString());
                     System.Windows.Forms.DataVisualization.Charting.DataPointCollection points = chartTemperature.Series[0].Points;
                     Invoke((EventHandler)(delegate
@@ -294,7 +307,7 @@ namespace PrinterPro
                             points.RemoveAt(0);
                             chartTemperature.Update();
                         }
-                        points.AddXY(Math.Round((double)tempTime / 1000, 1), temperature);
+                        points.AddXY(Math.Round((double)(DateTime.Now - initialTime).TotalMilliseconds / 1000, 1), temperature);
 
                         double minY = points.FindMinByValue().YValues[0], maxY = points.FindMaxByValue().YValues[0];
                         // +10 is to preserve a minimum range
@@ -306,22 +319,30 @@ namespace PrinterPro
                     }));
                     int interval = Convert.ToInt32(trackTempUpdate.Maximum - trackTempUpdate.Value);
                     Thread.Sleep(interval);
-                    tempTime += interval;
                 }
             }
             catch { }
         }
 
-        private void tempCommander(long setTime, int setTemp, long startTime)
+        private void tempCommander(string setTime_str, string setTemp_str)
         {
+            if (setTime_str == "" || setTime_str == "0")
+            {
+                return;
+            }
+            long setTime = Convert.ToInt64(setTime_str);
+            int setTemp = Convert.ToInt32(setTemp_str);
+
             spHeater.WriteLine("H" + setTime.ToString());
+            spHeater.ReadLine();
             spHeater.WriteLine("S" + setTemp.ToString());
-            startTime = tempTime;
+            spHeater.ReadLine();
             while (Math.Abs(temperature - setTemp) > 1) { }
-            while (tempTime - startTime <= setTime) { }
+            DateTime startTime = DateTime.Now;
+            while ((DateTime.Now - startTime).TotalMilliseconds / 1000 <= setTime) { }
         }
 
-        private void temperatureController()
+        private void tempPeratureCycler()
         {
             CYCLE_STAGES stage = CYCLE_STAGES.PRE;
             int setTemp = 0, setCycles = 0;
@@ -333,47 +354,87 @@ namespace PrinterPro
             }
             try
             {
+                // 初始化设置
+                spHeater.WriteLine("N1#255#1000#600");
+                spHeater.ReadLine();
                 while (stage <= CYCLE_STAGES.EXT)
                 {
                     switch (stage)
                     {
-                        case CYCLE_STAGES.PRE: setTime = Convert.ToInt32(stagePRE_time.Text); setTemp = Convert.ToInt32(stagePRE_temp.Text); break;
-                        case CYCLE_STAGES.EXT: setTime = Convert.ToInt32(stageEXT_time.Text); setTemp = Convert.ToInt32(stageEXT_temp.Text); break;
-                    }
-
-                    if (stage == CYCLE_STAGES.PRE || stage == CYCLE_STAGES.EXT)
-                    {
-                        tempCommander(setTime, setTemp, tempTime);
-                        stage++;
-                    }
-                    else
-                    {
-                        if (stage++ == CYCLE_STAGES.S1)
-                        {
-                            setCycles = Convert.ToInt32(stage1_cycles.Text);
-                            for (int i = 0; i < setCycles; i++)
+                        case CYCLE_STAGES.PRE:
+                            tempCommander(stagePRE_time.Text, stagePRE_temp.Text);
+                            stagePRE_time.BackColor = Color.PaleGreen;
+                            stagePRE_temp.BackColor = Color.PaleGreen;
+                            break;
+                        case CYCLE_STAGES.EXT:
+                            tempCommander(stageEXT_time.Text, stageEXT_temp.Text);
+                            stageEXT_time.BackColor = Color.PaleGreen;
+                            stageEXT_temp.BackColor = Color.PaleGreen;
+                            break;
+                        default:
+                            if (stage == CYCLE_STAGES.S1)
                             {
-                                tempCommander(Convert.ToInt32(stage1_1_time.Text), Convert.ToInt32(stage1_1_temp.Text), tempTime);
-                                tempCommander(Convert.ToInt32(stage1_2_time.Text), Convert.ToInt32(stage1_2_temp.Text), tempTime);
-                                tempCommander(Convert.ToInt32(stage1_3_time.Text), Convert.ToInt32(stage1_3_temp.Text), tempTime);
+                                for (int i = 0; i < Convert.ToInt32(stage1_cycles.Text); i++)
+                                {
+                                    tempCommander(stage1_1_time.Text, stage1_1_temp.Text);
+                                    stage1_1_time.BackColor = Color.PaleGreen;
+                                    stage1_1_temp.BackColor = Color.PaleGreen;
+                                    tempCommander(stage1_2_time.Text, stage1_2_temp.Text);
+                                    stage1_2_time.BackColor = Color.PaleGreen;
+                                    stage1_2_temp.BackColor = Color.PaleGreen;
+                                    tempCommander(stage1_3_time.Text, stage1_3_temp.Text);
+                                    stage1_3_time.BackColor = Color.PaleGreen;
+                                    stage1_3_temp.BackColor = Color.PaleGreen;
+                                }
+                                stage1_cycles.BackColor = Color.PaleGreen;
+                                stage1_cycles.BackColor = Color.PaleGreen;
                             }
-                        }
-                        if (stage++ == CYCLE_STAGES.S2)
-                        {
-                            setCycles = Convert.ToInt32(stage2_cycles.Text);
-                            for (int i = 0; i < setCycles; i++)
+                            if (stage == CYCLE_STAGES.S2)
                             {
-                                tempCommander(Convert.ToInt32(stage2_1_time.Text), Convert.ToInt32(stage2_1_temp.Text), tempTime);
-                                tempCommander(Convert.ToInt32(stage2_2_time.Text), Convert.ToInt32(stage2_2_temp.Text), tempTime);
-                                tempCommander(Convert.ToInt32(stage2_3_time.Text), Convert.ToInt32(stage2_3_temp.Text), tempTime);
+                                for (int i = 0; i < Convert.ToInt32(stage2_cycles.Text); i++)
+                                {
+                                    tempCommander(stage2_1_time.Text, stage2_1_temp.Text);
+                                    stage2_1_time.BackColor = Color.PaleGreen;
+                                    stage2_1_temp.BackColor = Color.PaleGreen;
+                                    tempCommander(stage2_2_time.Text, stage2_2_temp.Text);
+                                    stage2_2_time.BackColor = Color.PaleGreen;
+                                    stage2_2_temp.BackColor = Color.PaleGreen;
+                                    tempCommander(stage2_3_time.Text, stage2_3_temp.Text);
+                                    stage2_3_time.BackColor = Color.PaleGreen;
+                                    stage2_3_temp.BackColor = Color.PaleGreen;
+                                }
+                                stage2_cycles.BackColor = Color.PaleGreen;
+                                stage2_cycles.BackColor = Color.PaleGreen;
                             }
-                        }
+                            break;
                     }
+                    stage++;
                 }
-                spHeater.WriteLine("N1#100#1000#1000");
-                spHeater.WriteLine("B0");
+
             }
             catch { }
+            finally
+            {
+                if (!spHeater.IsOpen)
+                {
+                    spHeater.Open();
+                }
+                spHeater.WriteLine("N1#100#1000#1000");
+                spHeater.ReadLine();
+                spHeater.WriteLine("B0");
+                spHeater.ReadLine();
+                stagePRE_time.BackColor = Color.White; stagePRE_temp.BackColor = Color.White;
+                stageEXT_time.BackColor = Color.White; stageEXT_temp.BackColor = Color.White;
+                stage1_1_time.BackColor = Color.White; stage1_1_temp.BackColor = Color.White;
+                stage1_2_time.BackColor = Color.White; stage1_2_temp.BackColor = Color.White;
+                stage1_3_time.BackColor = Color.White; stage1_3_temp.BackColor = Color.White;
+                stage2_1_time.BackColor = Color.White; stage2_1_temp.BackColor = Color.White;
+                stage2_2_time.BackColor = Color.White; stage2_2_temp.BackColor = Color.White;
+                stage2_3_time.BackColor = Color.White; stage2_3_temp.BackColor = Color.White;
+                stage1_cycles.BackColor = Color.White; stage1_cycles.BackColor = Color.White;
+                stage2_cycles.BackColor = Color.White; stage2_cycles.BackColor = Color.White;
+                btnRunCycle.Text = "Run Cycles";
+            }
         }
 
         private void positionMonitor()
@@ -535,7 +596,7 @@ namespace PrinterPro
 
                 panelXYStage.Controls.Clear();
                 graphicsXYStage.Clear(Color.White);
-                if (Data.rows * Data.cols <= 10000)
+                if (Data.rows * Data.cols <= 500)
                 {
                     for (int i = 0; i < Data.rows; i++)
                     {
@@ -791,23 +852,50 @@ namespace PrinterPro
 
         private void btnRunCycle_Click(object sender, EventArgs e)
         {
-
+            if (threadTemperatureController != null && threadTemperatureController.IsAlive)
+            {
+                btnRunCycle.Text = "Run Cycles";
+                threadTemperatureController.Abort();
+            }
+            else
+            {
+                try
+                {
+                    if (!spHeater.IsOpen)
+                    {
+                        spHeater.Open();
+                    }
+                    threadTemperatureController = new Thread(tempPeratureCycler);
+                    threadTemperatureController.Start();
+                    btnRunCycle.Text = "Stop Cycles";
+                }
+                catch
+                { }
+            }
         }
 
-        private void btnBeginCycle_Click(object sender, EventArgs e)
+        private void btnTempMonitor_Click(object sender, EventArgs e)
         {
             if (threadTemperatureMonitor != null && threadTemperatureMonitor.IsAlive)
             {
                 threadTemperatureMonitor.Abort();
-                btnBeginCycle.Text = "Begin";
+                btnTempMonitor.Text = "Monitor Begin";
             }
             else
             {
-                threadTemperatureMonitor = new Thread(temperatureMonitor);
-                threadTemperatureMonitor.Start();
-                btnBeginCycle.Text = "Stop";
+                try
+                {
+                    if (!spHeater.IsOpen)
+                    {
+                        spHeater.Open();
+                    }
+                    threadTemperatureMonitor = new Thread(temperatureMonitor);
+                    threadTemperatureMonitor.Start();
+                    btnTempMonitor.Text = "Stop";
+                }
+                catch
+                {}
             }
-
         }
 
         private void tbFrequency_TextChanged(object sender, EventArgs e)

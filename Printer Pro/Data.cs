@@ -13,7 +13,7 @@ namespace PrinterPro
         public static double[] xRelative, yRelative;
         public static double xStart, yStart;
         public static double xDistance, yDistance;
-        public static float idleAccn = 1000, workAccn = 20;
+        public static float idleAccn = 1000, workAccn = 100;
 
         public static ArrayList gridData = new ArrayList();
         public static ArrayList dataImages = new ArrayList();

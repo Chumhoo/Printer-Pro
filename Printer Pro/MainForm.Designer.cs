@@ -119,6 +119,7 @@
             this.psPrint = new MetroFramework.Controls.MetroProgressSpinner();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.metroPanel12 = new MetroFramework.Controls.MetroPanel();
+            this.btnTempMonitor = new MetroFramework.Controls.MetroButton();
             this.btnRunCycle = new MetroFramework.Controls.MetroButton();
             this.metroLabel53 = new MetroFramework.Controls.MetroLabel();
             this.metroLabel52 = new MetroFramework.Controls.MetroLabel();
@@ -147,8 +148,6 @@
             this.stage1_3_temp = new MetroFramework.Controls.MetroTextBox();
             this.stage1_2_time = new MetroFramework.Controls.MetroTextBox();
             this.stage1_2_temp = new MetroFramework.Controls.MetroTextBox();
-            this.metroLabel42 = new MetroFramework.Controls.MetroLabel();
-            this.metroLabel41 = new MetroFramework.Controls.MetroLabel();
             this.metroLabel40 = new MetroFramework.Controls.MetroLabel();
             this.stage1_1_time = new MetroFramework.Controls.MetroTextBox();
             this.metroLabel39 = new MetroFramework.Controls.MetroLabel();
@@ -168,7 +167,6 @@
             this.comHeaterPort = new MetroFramework.Controls.MetroComboBox();
             this.metroLabel35 = new MetroFramework.Controls.MetroLabel();
             this.comAirValve = new MetroFramework.Controls.MetroComboBox();
-            this.btnBeginCycle = new MetroFramework.Controls.MetroButton();
             this.metroPanel4.SuspendLayout();
             this.metroPanel5.SuspendLayout();
             this.metroPanel8.SuspendLayout();
@@ -1137,7 +1135,7 @@
             this.tbWaitTime.CustomButton.UseSelectable = true;
             this.tbWaitTime.CustomButton.Visible = false;
             this.tbWaitTime.Lines = new string[] {
-        "0"};
+        "300"};
             this.tbWaitTime.Location = new System.Drawing.Point(129, 186);
             this.tbWaitTime.MaxLength = 32767;
             this.tbWaitTime.Name = "tbWaitTime";
@@ -1149,7 +1147,7 @@
             this.tbWaitTime.ShortcutsEnabled = true;
             this.tbWaitTime.Size = new System.Drawing.Size(75, 23);
             this.tbWaitTime.TabIndex = 85;
-            this.tbWaitTime.Text = "0";
+            this.tbWaitTime.Text = "300";
             this.tbWaitTime.UseSelectable = true;
             this.tbWaitTime.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.tbWaitTime.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
@@ -1479,7 +1477,7 @@
             // 
             // metroPanel12
             // 
-            this.metroPanel12.Controls.Add(this.btnBeginCycle);
+            this.metroPanel12.Controls.Add(this.btnTempMonitor);
             this.metroPanel12.Controls.Add(this.btnRunCycle);
             this.metroPanel12.Controls.Add(this.metroLabel53);
             this.metroPanel12.Controls.Add(this.metroLabel52);
@@ -1508,8 +1506,6 @@
             this.metroPanel12.Controls.Add(this.stage1_3_temp);
             this.metroPanel12.Controls.Add(this.stage1_2_time);
             this.metroPanel12.Controls.Add(this.stage1_2_temp);
-            this.metroPanel12.Controls.Add(this.metroLabel42);
-            this.metroPanel12.Controls.Add(this.metroLabel41);
             this.metroPanel12.Controls.Add(this.metroLabel40);
             this.metroPanel12.Controls.Add(this.stage1_1_time);
             this.metroPanel12.Controls.Add(this.metroLabel39);
@@ -1532,13 +1528,23 @@
             this.metroPanel12.VerticalScrollbarHighlightOnWheel = false;
             this.metroPanel12.VerticalScrollbarSize = 10;
             // 
+            // btnTempMonitor
+            // 
+            this.btnTempMonitor.Location = new System.Drawing.Point(750, 44);
+            this.btnTempMonitor.Name = "btnTempMonitor";
+            this.btnTempMonitor.Size = new System.Drawing.Size(96, 23);
+            this.btnTempMonitor.TabIndex = 61;
+            this.btnTempMonitor.Text = "Monitor Begin";
+            this.btnTempMonitor.UseSelectable = true;
+            this.btnTempMonitor.Click += new System.EventHandler(this.btnTempMonitor_Click);
+            // 
             // btnRunCycle
             // 
-            this.btnRunCycle.Location = new System.Drawing.Point(767, 74);
+            this.btnRunCycle.Location = new System.Drawing.Point(750, 73);
             this.btnRunCycle.Name = "btnRunCycle";
-            this.btnRunCycle.Size = new System.Drawing.Size(78, 23);
+            this.btnRunCycle.Size = new System.Drawing.Size(96, 23);
             this.btnRunCycle.TabIndex = 60;
-            this.btnRunCycle.Text = "Run";
+            this.btnRunCycle.Text = "Run Cycles";
             this.btnRunCycle.UseSelectable = true;
             this.btnRunCycle.Click += new System.EventHandler(this.btnRunCycle_Click);
             // 
@@ -1654,6 +1660,7 @@
             // 
             // stageEXT_time
             // 
+            this.stageEXT_time.BackColor = System.Drawing.Color.White;
             // 
             // 
             // 
@@ -1680,12 +1687,14 @@
             this.stageEXT_time.Size = new System.Drawing.Size(50, 23);
             this.stageEXT_time.TabIndex = 49;
             this.stageEXT_time.Text = "120";
+            this.stageEXT_time.UseCustomBackColor = true;
             this.stageEXT_time.UseSelectable = true;
             this.stageEXT_time.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.stageEXT_time.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
             // stageEXT_temp
             // 
+            this.stageEXT_temp.BackColor = System.Drawing.Color.White;
             // 
             // 
             // 
@@ -1712,12 +1721,14 @@
             this.stageEXT_temp.Size = new System.Drawing.Size(50, 23);
             this.stageEXT_temp.TabIndex = 48;
             this.stageEXT_temp.Text = "60";
+            this.stageEXT_temp.UseCustomBackColor = true;
             this.stageEXT_temp.UseSelectable = true;
             this.stageEXT_temp.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.stageEXT_temp.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
             // stagePRE_time
             // 
+            this.stagePRE_time.BackColor = System.Drawing.Color.White;
             // 
             // 
             // 
@@ -1731,7 +1742,7 @@
             this.stagePRE_time.CustomButton.UseSelectable = true;
             this.stagePRE_time.CustomButton.Visible = false;
             this.stagePRE_time.Lines = new string[] {
-        "120"};
+        "30"};
             this.stagePRE_time.Location = new System.Drawing.Point(128, 74);
             this.stagePRE_time.MaxLength = 32767;
             this.stagePRE_time.Name = "stagePRE_time";
@@ -1743,13 +1754,15 @@
             this.stagePRE_time.ShortcutsEnabled = true;
             this.stagePRE_time.Size = new System.Drawing.Size(50, 23);
             this.stagePRE_time.TabIndex = 47;
-            this.stagePRE_time.Text = "120";
+            this.stagePRE_time.Text = "30";
+            this.stagePRE_time.UseCustomBackColor = true;
             this.stagePRE_time.UseSelectable = true;
             this.stagePRE_time.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.stagePRE_time.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
             // stagePRE_temp
             // 
+            this.stagePRE_temp.BackColor = System.Drawing.Color.White;
             // 
             // 
             // 
@@ -1763,7 +1776,7 @@
             this.stagePRE_temp.CustomButton.UseSelectable = true;
             this.stagePRE_temp.CustomButton.Visible = false;
             this.stagePRE_temp.Lines = new string[] {
-        "95"};
+        "60"};
             this.stagePRE_temp.Location = new System.Drawing.Point(128, 43);
             this.stagePRE_temp.MaxLength = 32767;
             this.stagePRE_temp.Name = "stagePRE_temp";
@@ -1775,13 +1788,15 @@
             this.stagePRE_temp.ShortcutsEnabled = true;
             this.stagePRE_temp.Size = new System.Drawing.Size(50, 23);
             this.stagePRE_temp.TabIndex = 46;
-            this.stagePRE_temp.Text = "95";
+            this.stagePRE_temp.Text = "60";
+            this.stagePRE_temp.UseCustomBackColor = true;
             this.stagePRE_temp.UseSelectable = true;
             this.stagePRE_temp.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.stagePRE_temp.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
             // stage2_cycles
             // 
+            this.stage2_cycles.BackColor = System.Drawing.Color.White;
             // 
             // 
             // 
@@ -1808,6 +1823,7 @@
             this.stage2_cycles.Size = new System.Drawing.Size(50, 23);
             this.stage2_cycles.TabIndex = 44;
             this.stage2_cycles.Text = "0";
+            this.stage2_cycles.UseCustomBackColor = true;
             this.stage2_cycles.UseSelectable = true;
             this.stage2_cycles.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.stage2_cycles.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
@@ -1825,6 +1841,7 @@
             // 
             // stage1_cycles
             // 
+            this.stage1_cycles.BackColor = System.Drawing.Color.White;
             // 
             // 
             // 
@@ -1851,12 +1868,14 @@
             this.stage1_cycles.Size = new System.Drawing.Size(50, 23);
             this.stage1_cycles.TabIndex = 42;
             this.stage1_cycles.Text = "40";
+            this.stage1_cycles.UseCustomBackColor = true;
             this.stage1_cycles.UseSelectable = true;
             this.stage1_cycles.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.stage1_cycles.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
             // stage2_3_time
             // 
+            this.stage2_3_time.BackColor = System.Drawing.Color.White;
             // 
             // 
             // 
@@ -1881,12 +1900,14 @@
             this.stage2_3_time.ShortcutsEnabled = true;
             this.stage2_3_time.Size = new System.Drawing.Size(50, 23);
             this.stage2_3_time.TabIndex = 35;
+            this.stage2_3_time.UseCustomBackColor = true;
             this.stage2_3_time.UseSelectable = true;
             this.stage2_3_time.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.stage2_3_time.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
             // stage2_3_temp
             // 
+            this.stage2_3_temp.BackColor = System.Drawing.Color.White;
             // 
             // 
             // 
@@ -1911,12 +1932,14 @@
             this.stage2_3_temp.ShortcutsEnabled = true;
             this.stage2_3_temp.Size = new System.Drawing.Size(50, 23);
             this.stage2_3_temp.TabIndex = 34;
+            this.stage2_3_temp.UseCustomBackColor = true;
             this.stage2_3_temp.UseSelectable = true;
             this.stage2_3_temp.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.stage2_3_temp.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
             // stage2_2_time
             // 
+            this.stage2_2_time.BackColor = System.Drawing.Color.White;
             // 
             // 
             // 
@@ -1941,12 +1964,14 @@
             this.stage2_2_time.ShortcutsEnabled = true;
             this.stage2_2_time.Size = new System.Drawing.Size(50, 23);
             this.stage2_2_time.TabIndex = 33;
+            this.stage2_2_time.UseCustomBackColor = true;
             this.stage2_2_time.UseSelectable = true;
             this.stage2_2_time.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.stage2_2_time.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
             // stage2_2_temp
             // 
+            this.stage2_2_temp.BackColor = System.Drawing.Color.White;
             // 
             // 
             // 
@@ -1971,12 +1996,14 @@
             this.stage2_2_temp.ShortcutsEnabled = true;
             this.stage2_2_temp.Size = new System.Drawing.Size(50, 23);
             this.stage2_2_temp.TabIndex = 32;
+            this.stage2_2_temp.UseCustomBackColor = true;
             this.stage2_2_temp.UseSelectable = true;
             this.stage2_2_temp.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.stage2_2_temp.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
             // stage2_1_time
             // 
+            this.stage2_1_time.BackColor = System.Drawing.Color.White;
             // 
             // 
             // 
@@ -2001,12 +2028,14 @@
             this.stage2_1_time.ShortcutsEnabled = true;
             this.stage2_1_time.Size = new System.Drawing.Size(50, 23);
             this.stage2_1_time.TabIndex = 31;
+            this.stage2_1_time.UseCustomBackColor = true;
             this.stage2_1_time.UseSelectable = true;
             this.stage2_1_time.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.stage2_1_time.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
             // stage2_1_temp
             // 
+            this.stage2_1_temp.BackColor = System.Drawing.Color.White;
             // 
             // 
             // 
@@ -2031,12 +2060,14 @@
             this.stage2_1_temp.ShortcutsEnabled = true;
             this.stage2_1_temp.Size = new System.Drawing.Size(50, 23);
             this.stage2_1_temp.TabIndex = 30;
+            this.stage2_1_temp.UseCustomBackColor = true;
             this.stage2_1_temp.UseSelectable = true;
             this.stage2_1_temp.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.stage2_1_temp.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
             // stage1_3_time
             // 
+            this.stage1_3_time.BackColor = System.Drawing.Color.White;
             // 
             // 
             // 
@@ -2063,12 +2094,14 @@
             this.stage1_3_time.Size = new System.Drawing.Size(50, 23);
             this.stage1_3_time.TabIndex = 29;
             this.stage1_3_time.Text = "0";
+            this.stage1_3_time.UseCustomBackColor = true;
             this.stage1_3_time.UseSelectable = true;
             this.stage1_3_time.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.stage1_3_time.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
             // stage1_3_temp
             // 
+            this.stage1_3_temp.BackColor = System.Drawing.Color.White;
             // 
             // 
             // 
@@ -2095,12 +2128,14 @@
             this.stage1_3_temp.Size = new System.Drawing.Size(50, 23);
             this.stage1_3_temp.TabIndex = 28;
             this.stage1_3_temp.Text = "0";
+            this.stage1_3_temp.UseCustomBackColor = true;
             this.stage1_3_temp.UseSelectable = true;
             this.stage1_3_temp.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.stage1_3_temp.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
             // stage1_2_time
             // 
+            this.stage1_2_time.BackColor = System.Drawing.Color.White;
             // 
             // 
             // 
@@ -2127,12 +2162,14 @@
             this.stage1_2_time.Size = new System.Drawing.Size(50, 23);
             this.stage1_2_time.TabIndex = 27;
             this.stage1_2_time.Text = "15";
+            this.stage1_2_time.UseCustomBackColor = true;
             this.stage1_2_time.UseSelectable = true;
             this.stage1_2_time.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.stage1_2_time.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
             // 
             // stage1_2_temp
             // 
+            this.stage1_2_temp.BackColor = System.Drawing.Color.White;
             // 
             // 
             // 
@@ -2159,31 +2196,10 @@
             this.stage1_2_temp.Size = new System.Drawing.Size(50, 23);
             this.stage1_2_temp.TabIndex = 26;
             this.stage1_2_temp.Text = "60";
+            this.stage1_2_temp.UseCustomBackColor = true;
             this.stage1_2_temp.UseSelectable = true;
             this.stage1_2_temp.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.stage1_2_temp.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
-            // 
-            // metroLabel42
-            // 
-            this.metroLabel42.AutoSize = true;
-            this.metroLabel42.FontWeight = MetroFramework.MetroLabelWeight.Regular;
-            this.metroLabel42.ForeColor = System.Drawing.Color.Transparent;
-            this.metroLabel42.Location = new System.Drawing.Point(718, 75);
-            this.metroLabel42.Name = "metroLabel42";
-            this.metroLabel42.Size = new System.Drawing.Size(15, 19);
-            this.metroLabel42.TabIndex = 25;
-            this.metroLabel42.Text = "s";
-            // 
-            // metroLabel41
-            // 
-            this.metroLabel41.AutoSize = true;
-            this.metroLabel41.FontWeight = MetroFramework.MetroLabelWeight.Regular;
-            this.metroLabel41.ForeColor = System.Drawing.Color.Transparent;
-            this.metroLabel41.Location = new System.Drawing.Point(717, 46);
-            this.metroLabel41.Name = "metroLabel41";
-            this.metroLabel41.Size = new System.Drawing.Size(23, 19);
-            this.metroLabel41.TabIndex = 24;
-            this.metroLabel41.Text = "℃";
             // 
             // metroLabel40
             // 
@@ -2192,12 +2208,13 @@
             this.metroLabel40.ForeColor = System.Drawing.Color.Transparent;
             this.metroLabel40.Location = new System.Drawing.Point(38, 72);
             this.metroLabel40.Name = "metroLabel40";
-            this.metroLabel40.Size = new System.Drawing.Size(38, 19);
+            this.metroLabel40.Size = new System.Drawing.Size(65, 19);
             this.metroLabel40.TabIndex = 11;
-            this.metroLabel40.Text = "Time";
+            this.metroLabel40.Text = "Time  /  s";
             // 
             // stage1_1_time
             // 
+            this.stage1_1_time.BackColor = System.Drawing.Color.White;
             // 
             // 
             // 
@@ -2224,6 +2241,7 @@
             this.stage1_1_time.Size = new System.Drawing.Size(50, 23);
             this.stage1_1_time.TabIndex = 10;
             this.stage1_1_time.Text = "5";
+            this.stage1_1_time.UseCustomBackColor = true;
             this.stage1_1_time.UseSelectable = true;
             this.stage1_1_time.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.stage1_1_time.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
@@ -2235,12 +2253,13 @@
             this.metroLabel39.ForeColor = System.Drawing.Color.Transparent;
             this.metroLabel39.Location = new System.Drawing.Point(38, 43);
             this.metroLabel39.Name = "metroLabel39";
-            this.metroLabel39.Size = new System.Drawing.Size(43, 19);
+            this.metroLabel39.Size = new System.Drawing.Size(70, 19);
             this.metroLabel39.TabIndex = 9;
-            this.metroLabel39.Text = "Temp";
+            this.metroLabel39.Text = "Temp / ℃";
             // 
             // stage1_1_temp
             // 
+            this.stage1_1_temp.BackColor = System.Drawing.Color.White;
             // 
             // 
             // 
@@ -2267,6 +2286,7 @@
             this.stage1_1_temp.Size = new System.Drawing.Size(50, 23);
             this.stage1_1_temp.TabIndex = 8;
             this.stage1_1_temp.Text = "95";
+            this.stage1_1_temp.UseCustomBackColor = true;
             this.stage1_1_temp.UseSelectable = true;
             this.stage1_1_temp.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.stage1_1_temp.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
@@ -2451,16 +2471,6 @@
             this.comAirValve.UseCustomBackColor = true;
             this.comAirValve.UseSelectable = true;
             // 
-            // btnBeginCycle
-            // 
-            this.btnBeginCycle.Location = new System.Drawing.Point(767, 45);
-            this.btnBeginCycle.Name = "btnBeginCycle";
-            this.btnBeginCycle.Size = new System.Drawing.Size(78, 23);
-            this.btnBeginCycle.TabIndex = 61;
-            this.btnBeginCycle.Text = "Begin";
-            this.btnBeginCycle.UseSelectable = true;
-            this.btnBeginCycle.Click += new System.EventHandler(this.btnBeginCycle_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -2617,8 +2627,6 @@
         private MetroFramework.Controls.MetroLabel metroLabel40;
         private MetroFramework.Controls.MetroTextBox stage1_1_time;
         private MetroFramework.Controls.MetroLabel metroLabel39;
-        private MetroFramework.Controls.MetroLabel metroLabel41;
-        private MetroFramework.Controls.MetroLabel metroLabel42;
         private MetroFramework.Controls.MetroTextBox stage2_3_time;
         private MetroFramework.Controls.MetroTextBox stage2_3_temp;
         private MetroFramework.Controls.MetroTextBox stage2_2_time;
@@ -2647,6 +2655,6 @@
         private MetroFramework.Controls.MetroLabel metroLabel47;
         private MetroFramework.Controls.MetroLabel metroLabel53;
         private MetroFramework.Controls.MetroButton btnRunCycle;
-        private MetroFramework.Controls.MetroButton btnBeginCycle;
+        private MetroFramework.Controls.MetroButton btnTempMonitor;
     }
 }
