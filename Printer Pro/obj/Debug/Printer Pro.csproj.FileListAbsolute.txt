@@ -46,7 +46,6 @@ C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\obj\Debug\AxInter
 C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\obj\Debug\Printer Pro.csproj.ResolveComReference.cache
 C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\obj\Debug\PrinterPro.Console.resources
 C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\obj\Debug\PrinterPro.DataGrid.resources
-C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\obj\Debug\PrinterPro.Loader.resources
 C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\obj\Debug\PrinterPro.MainForm.resources
 C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\obj\Debug\PrinterPro.Properties.Resources.resources
 C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\obj\Debug\Printer Pro.csproj.GenerateResource.Cache
@@ -54,3 +53,16 @@ C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\obj\Debug\Printer
 C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\obj\Debug\Printer Pro.exe
 C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\obj\Debug\Printer Pro.pdb
 C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\obj\Debug\PrinterPro.AddMode.resources
+C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\bin\Debug\AForge.Controls.dll
+C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\bin\Debug\AForge.dll
+C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\bin\Debug\AForge.Imaging.dll
+C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\bin\Debug\AForge.Math.dll
+C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\bin\Debug\AForge.Video.DirectShow.dll
+C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\bin\Debug\AForge.Video.dll
+C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\bin\Debug\AForge.xml
+C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\bin\Debug\AForge.Controls.xml
+C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\bin\Debug\AForge.Imaging.xml
+C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\bin\Debug\AForge.Math.xml
+C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\bin\Debug\AForge.Video.xml
+C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\bin\Debug\AForge.Video.DirectShow.xml
+C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\bin\Debug\Printer Pro.xml

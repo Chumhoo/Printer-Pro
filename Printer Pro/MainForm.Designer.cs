@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.metroLabel33 = new MetroFramework.Controls.MetroLabel();
             this.metroLabel12 = new MetroFramework.Controls.MetroLabel();
             this.metroLabel11 = new MetroFramework.Controls.MetroLabel();
@@ -62,11 +62,16 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.metroPanel13 = new MetroFramework.Controls.MetroPanel();
             this.panel = new MetroFramework.Controls.MetroPanel();
+            this.btnCameraSettings = new MetroFramework.Controls.MetroButton();
+            this.panelXYStage = new MetroFramework.Controls.MetroPanel();
+            this.videoSourcePlayer = new AForge.Controls.VideoSourcePlayer();
             this.lbTimeLeft = new MetroFramework.Controls.MetroLabel();
             this.metroLabel2 = new MetroFramework.Controls.MetroLabel();
             this.metroPanel10 = new MetroFramework.Controls.MetroPanel();
             this.cbChannel = new MetroFramework.Controls.MetroComboBox();
+            this.btnConnectValvePort = new MetroFramework.Controls.MetroButton();
             this.metroLabel24 = new MetroFramework.Controls.MetroLabel();
+            this.comAirValve = new MetroFramework.Controls.MetroComboBox();
             this.metroLabel1 = new MetroFramework.Controls.MetroLabel();
             this.metroPanel11 = new MetroFramework.Controls.MetroPanel();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
@@ -115,12 +120,13 @@
             this.cbPrintMode = new MetroFramework.Controls.MetroComboBox();
             this.pbPrint = new MetroFramework.Controls.MetroProgressBar();
             this.lbPrintProgress = new MetroFramework.Controls.MetroLabel();
-            this.panelXYStage = new MetroFramework.Controls.MetroPanel();
-            this.psPrint = new MetroFramework.Controls.MetroProgressSpinner();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.metroPanel12 = new MetroFramework.Controls.MetroPanel();
+            this.btnConnectHeaterPort = new MetroFramework.Controls.MetroButton();
             this.btnTempMonitor = new MetroFramework.Controls.MetroButton();
             this.btnRunCycle = new MetroFramework.Controls.MetroButton();
+            this.comHeaterPort = new MetroFramework.Controls.MetroComboBox();
+            this.metroLabel35 = new MetroFramework.Controls.MetroLabel();
             this.metroLabel53 = new MetroFramework.Controls.MetroLabel();
             this.metroLabel52 = new MetroFramework.Controls.MetroLabel();
             this.metroLabel51 = new MetroFramework.Controls.MetroLabel();
@@ -161,12 +167,6 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.metroPanel1 = new MetroFramework.Controls.MetroPanel();
             this.metroPanel9 = new MetroFramework.Controls.MetroPanel();
-            this.btnConnectHeaterPort = new MetroFramework.Controls.MetroButton();
-            this.btnConnectValvePort = new MetroFramework.Controls.MetroButton();
-            this.metroLabel34 = new MetroFramework.Controls.MetroLabel();
-            this.comHeaterPort = new MetroFramework.Controls.MetroComboBox();
-            this.metroLabel35 = new MetroFramework.Controls.MetroLabel();
-            this.comAirValve = new MetroFramework.Controls.MetroComboBox();
             this.metroPanel4.SuspendLayout();
             this.metroPanel5.SuspendLayout();
             this.metroPanel8.SuspendLayout();
@@ -185,13 +185,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
-            this.panelXYStage.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.metroPanel12.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chartTemperature)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.metroPanel1.SuspendLayout();
-            this.metroPanel9.SuspendLayout();
             this.SuspendLayout();
             // 
             // metroLabel33
@@ -547,7 +545,7 @@
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Name = "tabControl";
-            this.tabControl.SelectedIndex = 1;
+            this.tabControl.SelectedIndex = 0;
             this.tabControl.Size = new System.Drawing.Size(927, 543);
             this.tabControl.TabIndex = 2;
             this.tabControl.UseSelectable = true;
@@ -578,12 +576,14 @@
             // 
             // panel
             // 
+            this.panel.Controls.Add(this.btnCameraSettings);
+            this.panel.Controls.Add(this.panelXYStage);
+            this.panel.Controls.Add(this.videoSourcePlayer);
             this.panel.Controls.Add(this.lbTimeLeft);
             this.panel.Controls.Add(this.metroLabel2);
             this.panel.Controls.Add(this.metroPanel10);
             this.panel.Controls.Add(this.pbPrint);
             this.panel.Controls.Add(this.lbPrintProgress);
-            this.panel.Controls.Add(this.panelXYStage);
             this.panel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel.HorizontalScrollbarBarColor = true;
             this.panel.HorizontalScrollbarHighlightOnWheel = false;
@@ -595,6 +595,41 @@
             this.panel.VerticalScrollbarBarColor = true;
             this.panel.VerticalScrollbarHighlightOnWheel = false;
             this.panel.VerticalScrollbarSize = 10;
+            // 
+            // btnCameraSettings
+            // 
+            this.btnCameraSettings.Location = new System.Drawing.Point(655, 11);
+            this.btnCameraSettings.Name = "btnCameraSettings";
+            this.btnCameraSettings.Size = new System.Drawing.Size(101, 27);
+            this.btnCameraSettings.TabIndex = 8;
+            this.btnCameraSettings.Text = "Camera Settings";
+            this.btnCameraSettings.UseSelectable = true;
+            this.btnCameraSettings.Click += new System.EventHandler(this.btnCameraSettings_Click);
+            // 
+            // panelXYStage
+            // 
+            this.panelXYStage.BackColor = System.Drawing.Color.Transparent;
+            this.panelXYStage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.panelXYStage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panelXYStage.HorizontalScrollbarBarColor = true;
+            this.panelXYStage.HorizontalScrollbarHighlightOnWheel = false;
+            this.panelXYStage.HorizontalScrollbarSize = 10;
+            this.panelXYStage.Location = new System.Drawing.Point(759, 6);
+            this.panelXYStage.Name = "panelXYStage";
+            this.panelXYStage.Size = new System.Drawing.Size(155, 92);
+            this.panelXYStage.TabIndex = 2;
+            this.panelXYStage.VerticalScrollbarBarColor = true;
+            this.panelXYStage.VerticalScrollbarHighlightOnWheel = false;
+            this.panelXYStage.VerticalScrollbarSize = 10;
+            // 
+            // videoSourcePlayer
+            // 
+            this.videoSourcePlayer.Location = new System.Drawing.Point(249, 6);
+            this.videoSourcePlayer.Name = "videoSourcePlayer";
+            this.videoSourcePlayer.Size = new System.Drawing.Size(665, 458);
+            this.videoSourcePlayer.TabIndex = 2;
+            this.videoSourcePlayer.Text = "videoSourcePlayer1";
+            this.videoSourcePlayer.VideoSource = null;
             // 
             // lbTimeLeft
             // 
@@ -620,7 +655,9 @@
             // metroPanel10
             // 
             this.metroPanel10.Controls.Add(this.cbChannel);
+            this.metroPanel10.Controls.Add(this.btnConnectValvePort);
             this.metroPanel10.Controls.Add(this.metroLabel24);
+            this.metroPanel10.Controls.Add(this.comAirValve);
             this.metroPanel10.Controls.Add(this.metroLabel1);
             this.metroPanel10.Controls.Add(this.metroPanel11);
             this.metroPanel10.Controls.Add(this.metroLabel5);
@@ -652,26 +689,49 @@
             "4",
             "5",
             "6"});
-            this.cbChannel.Location = new System.Drawing.Point(96, 55);
+            this.cbChannel.Location = new System.Drawing.Point(99, 92);
             this.cbChannel.Name = "cbChannel";
             this.cbChannel.Size = new System.Drawing.Size(121, 29);
             this.cbChannel.TabIndex = 108;
             this.cbChannel.UseSelectable = true;
             this.cbChannel.SelectedIndexChanged += new System.EventHandler(this.cbChannel_SelectedIndexChanged);
             // 
+            // btnConnectValvePort
+            // 
+            this.btnConnectValvePort.BackgroundImage = global::PrinterPro.Properties.Resources.connect;
+            this.btnConnectValvePort.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnConnectValvePort.FontWeight = MetroFramework.MetroButtonWeight.Regular;
+            this.btnConnectValvePort.Location = new System.Drawing.Point(193, 18);
+            this.btnConnectValvePort.Name = "btnConnectValvePort";
+            this.btnConnectValvePort.Size = new System.Drawing.Size(27, 29);
+            this.btnConnectValvePort.TabIndex = 29;
+            this.btnConnectValvePort.UseSelectable = true;
+            // 
             // metroLabel24
             // 
             this.metroLabel24.AutoSize = true;
-            this.metroLabel24.Location = new System.Drawing.Point(16, 60);
+            this.metroLabel24.Location = new System.Drawing.Point(19, 97);
             this.metroLabel24.Name = "metroLabel24";
             this.metroLabel24.Size = new System.Drawing.Size(56, 19);
             this.metroLabel24.TabIndex = 107;
             this.metroLabel24.Text = "Channel";
             // 
+            // comAirValve
+            // 
+            this.comAirValve.BackColor = System.Drawing.Color.Transparent;
+            this.comAirValve.FormattingEnabled = true;
+            this.comAirValve.ItemHeight = 23;
+            this.comAirValve.Location = new System.Drawing.Point(19, 18);
+            this.comAirValve.Name = "comAirValve";
+            this.comAirValve.Size = new System.Drawing.Size(168, 29);
+            this.comAirValve.TabIndex = 26;
+            this.comAirValve.UseCustomBackColor = true;
+            this.comAirValve.UseSelectable = true;
+            // 
             // metroLabel1
             // 
             this.metroLabel1.AutoSize = true;
-            this.metroLabel1.Location = new System.Drawing.Point(8, 22);
+            this.metroLabel1.Location = new System.Drawing.Point(11, 59);
             this.metroLabel1.Name = "metroLabel1";
             this.metroLabel1.Size = new System.Drawing.Size(75, 19);
             this.metroLabel1.TabIndex = 105;
@@ -720,9 +780,9 @@
             this.metroPanel11.HorizontalScrollbarBarColor = true;
             this.metroPanel11.HorizontalScrollbarHighlightOnWheel = false;
             this.metroPanel11.HorizontalScrollbarSize = 10;
-            this.metroPanel11.Location = new System.Drawing.Point(0, 193);
+            this.metroPanel11.Location = new System.Drawing.Point(0, 271);
             this.metroPanel11.Name = "metroPanel11";
-            this.metroPanel11.Size = new System.Drawing.Size(241, 297);
+            this.metroPanel11.Size = new System.Drawing.Size(241, 219);
             this.metroPanel11.TabIndex = 104;
             this.metroPanel11.VerticalScrollbarBarColor = true;
             this.metroPanel11.VerticalScrollbarHighlightOnWheel = false;
@@ -743,7 +803,7 @@
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(6, 64);
+            this.pictureBox1.Location = new System.Drawing.Point(6, 40);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(30, 21);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -766,7 +826,7 @@
             this.tbXDist.CustomButton.Visible = false;
             this.tbXDist.Lines = new string[] {
         "1.0"};
-            this.tbXDist.Location = new System.Drawing.Point(69, 65);
+            this.tbXDist.Location = new System.Drawing.Point(69, 41);
             this.tbXDist.MaxLength = 32767;
             this.tbXDist.Name = "tbXDist";
             this.tbXDist.PasswordChar = '\0';
@@ -796,7 +856,7 @@
             // 
             this.metroLabel14.AutoSize = true;
             this.metroLabel14.FontSize = MetroFramework.MetroLabelSize.Small;
-            this.metroLabel14.Location = new System.Drawing.Point(41, 69);
+            this.metroLabel14.Location = new System.Drawing.Point(41, 45);
             this.metroLabel14.Name = "metroLabel14";
             this.metroLabel14.Size = new System.Drawing.Size(29, 15);
             this.metroLabel14.TabIndex = 51;
@@ -806,7 +866,7 @@
             // 
             this.metroLabel21.AutoSize = true;
             this.metroLabel21.FontSize = MetroFramework.MetroLabelSize.Small;
-            this.metroLabel21.Location = new System.Drawing.Point(205, 189);
+            this.metroLabel21.Location = new System.Drawing.Point(205, 127);
             this.metroLabel21.Name = "metroLabel21";
             this.metroLabel21.Size = new System.Drawing.Size(22, 15);
             this.metroLabel21.TabIndex = 91;
@@ -860,7 +920,7 @@
             this.tbYDist.CustomButton.Visible = false;
             this.tbYDist.Lines = new string[] {
         "1.0"};
-            this.tbYDist.Location = new System.Drawing.Point(169, 65);
+            this.tbYDist.Location = new System.Drawing.Point(169, 41);
             this.tbYDist.MaxLength = 32767;
             this.tbYDist.Name = "tbYDist";
             this.tbYDist.PasswordChar = '\0';
@@ -881,7 +941,7 @@
             this.panelFrequency.HorizontalScrollbarBarColor = true;
             this.panelFrequency.HorizontalScrollbarHighlightOnWheel = false;
             this.panelFrequency.HorizontalScrollbarSize = 10;
-            this.panelFrequency.Location = new System.Drawing.Point(4, 262);
+            this.panelFrequency.Location = new System.Drawing.Point(4, 184);
             this.panelFrequency.Name = "panelFrequency";
             this.panelFrequency.Size = new System.Drawing.Size(233, 30);
             this.panelFrequency.TabIndex = 83;
@@ -894,7 +954,7 @@
             // 
             this.metroLabel15.AutoSize = true;
             this.metroLabel15.FontSize = MetroFramework.MetroLabelSize.Small;
-            this.metroLabel15.Location = new System.Drawing.Point(138, 69);
+            this.metroLabel15.Location = new System.Drawing.Point(138, 45);
             this.metroLabel15.Name = "metroLabel15";
             this.metroLabel15.Size = new System.Drawing.Size(28, 15);
             this.metroLabel15.TabIndex = 53;
@@ -936,7 +996,7 @@
             // 
             this.metroLabel13.AutoSize = true;
             this.metroLabel13.FontSize = MetroFramework.MetroLabelSize.Small;
-            this.metroLabel13.Location = new System.Drawing.Point(201, 140);
+            this.metroLabel13.Location = new System.Drawing.Point(201, 96);
             this.metroLabel13.Name = "metroLabel13";
             this.metroLabel13.Size = new System.Drawing.Size(36, 15);
             this.metroLabel13.TabIndex = 89;
@@ -956,7 +1016,7 @@
             // 
             this.metroLabel6.AutoSize = true;
             this.metroLabel6.FontSize = MetroFramework.MetroLabelSize.Small;
-            this.metroLabel6.Location = new System.Drawing.Point(100, 140);
+            this.metroLabel6.Location = new System.Drawing.Point(100, 96);
             this.metroLabel6.Name = "metroLabel6";
             this.metroLabel6.Size = new System.Drawing.Size(36, 15);
             this.metroLabel6.TabIndex = 88;
@@ -966,7 +1026,7 @@
             // 
             this.pictureBox3.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox3.Image = global::PrinterPro.Properties.Resources.speed;
-            this.pictureBox3.Location = new System.Drawing.Point(6, 133);
+            this.pictureBox3.Location = new System.Drawing.Point(6, 89);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(30, 29);
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -975,7 +1035,7 @@
             // 
             // btnPreviewPulse
             // 
-            this.btnPreviewPulse.Location = new System.Drawing.Point(207, 233);
+            this.btnPreviewPulse.Location = new System.Drawing.Point(207, 155);
             this.btnPreviewPulse.Name = "btnPreviewPulse";
             this.btnPreviewPulse.Size = new System.Drawing.Size(16, 23);
             this.btnPreviewPulse.TabIndex = 87;
@@ -999,7 +1059,7 @@
             this.tbIdleSpeed.CustomButton.Visible = false;
             this.tbIdleSpeed.Lines = new string[] {
         "50"};
-            this.tbIdleSpeed.Location = new System.Drawing.Point(69, 137);
+            this.tbIdleSpeed.Location = new System.Drawing.Point(69, 93);
             this.tbIdleSpeed.MaxLength = 32767;
             this.tbIdleSpeed.Name = "tbIdleSpeed";
             this.tbIdleSpeed.PasswordChar = '\0';
@@ -1031,7 +1091,7 @@
             this.tbPulseWidth.CustomButton.Visible = false;
             this.tbPulseWidth.Lines = new string[] {
         "1"};
-            this.tbPulseWidth.Location = new System.Drawing.Point(171, 233);
+            this.tbPulseWidth.Location = new System.Drawing.Point(171, 155);
             this.tbPulseWidth.MaxLength = 32767;
             this.tbPulseWidth.Name = "tbPulseWidth";
             this.tbPulseWidth.PasswordChar = '\0';
@@ -1052,7 +1112,7 @@
             // 
             this.metroLabel20.AutoSize = true;
             this.metroLabel20.FontSize = MetroFramework.MetroLabelSize.Small;
-            this.metroLabel20.Location = new System.Drawing.Point(41, 140);
+            this.metroLabel20.Location = new System.Drawing.Point(41, 96);
             this.metroLabel20.Name = "metroLabel20";
             this.metroLabel20.Size = new System.Drawing.Size(25, 15);
             this.metroLabel20.TabIndex = 60;
@@ -1062,7 +1122,7 @@
             // 
             this.metroLabel22.AutoSize = true;
             this.metroLabel22.FontSize = MetroFramework.MetroLabelSize.Small;
-            this.metroLabel22.Location = new System.Drawing.Point(102, 236);
+            this.metroLabel22.Location = new System.Drawing.Point(102, 158);
             this.metroLabel22.Name = "metroLabel22";
             this.metroLabel22.Size = new System.Drawing.Size(66, 15);
             this.metroLabel22.TabIndex = 84;
@@ -1072,7 +1132,7 @@
             // 
             this.metroLabel19.AutoSize = true;
             this.metroLabel19.FontSize = MetroFramework.MetroLabelSize.Small;
-            this.metroLabel19.Location = new System.Drawing.Point(134, 140);
+            this.metroLabel19.Location = new System.Drawing.Point(134, 96);
             this.metroLabel19.Name = "metroLabel19";
             this.metroLabel19.Size = new System.Drawing.Size(34, 15);
             this.metroLabel19.TabIndex = 62;
@@ -1082,7 +1142,7 @@
             // 
             this.metroLabel18.AutoSize = true;
             this.metroLabel18.FontSize = MetroFramework.MetroLabelSize.Small;
-            this.metroLabel18.Location = new System.Drawing.Point(41, 189);
+            this.metroLabel18.Location = new System.Drawing.Point(41, 127);
             this.metroLabel18.Name = "metroLabel18";
             this.metroLabel18.Size = new System.Drawing.Size(85, 15);
             this.metroLabel18.TabIndex = 86;
@@ -1104,7 +1164,7 @@
             this.tbWorkSpeed.CustomButton.Visible = false;
             this.tbWorkSpeed.Lines = new string[] {
         "50"};
-            this.tbWorkSpeed.Location = new System.Drawing.Point(169, 137);
+            this.tbWorkSpeed.Location = new System.Drawing.Point(169, 93);
             this.tbWorkSpeed.MaxLength = 32767;
             this.tbWorkSpeed.Name = "tbWorkSpeed";
             this.tbWorkSpeed.PasswordChar = '\0';
@@ -1135,8 +1195,8 @@
             this.tbWaitTime.CustomButton.UseSelectable = true;
             this.tbWaitTime.CustomButton.Visible = false;
             this.tbWaitTime.Lines = new string[] {
-        "300"};
-            this.tbWaitTime.Location = new System.Drawing.Point(129, 186);
+        "0"};
+            this.tbWaitTime.Location = new System.Drawing.Point(129, 124);
             this.tbWaitTime.MaxLength = 32767;
             this.tbWaitTime.Name = "tbWaitTime";
             this.tbWaitTime.PasswordChar = '\0';
@@ -1147,7 +1207,7 @@
             this.tbWaitTime.ShortcutsEnabled = true;
             this.tbWaitTime.Size = new System.Drawing.Size(75, 23);
             this.tbWaitTime.TabIndex = 85;
-            this.tbWaitTime.Text = "300";
+            this.tbWaitTime.Text = "0";
             this.tbWaitTime.UseSelectable = true;
             this.tbWaitTime.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
             this.tbWaitTime.WaterMarkFont = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Pixel);
@@ -1178,7 +1238,7 @@
             this.tbFrequency.CustomButton.Visible = false;
             this.tbFrequency.Lines = new string[] {
         "10"};
-            this.tbFrequency.Location = new System.Drawing.Point(63, 233);
+            this.tbFrequency.Location = new System.Drawing.Point(63, 155);
             this.tbFrequency.MaxLength = 32767;
             this.tbFrequency.Name = "tbFrequency";
             this.tbFrequency.PasswordChar = '\0';
@@ -1199,7 +1259,7 @@
             // 
             this.metroLabel32.AutoSize = true;
             this.metroLabel32.FontSize = MetroFramework.MetroLabelSize.Small;
-            this.metroLabel32.Location = new System.Drawing.Point(43, 92);
+            this.metroLabel32.Location = new System.Drawing.Point(43, 68);
             this.metroLabel32.Name = "metroLabel32";
             this.metroLabel32.Size = new System.Drawing.Size(22, 15);
             this.metroLabel32.TabIndex = 78;
@@ -1209,7 +1269,7 @@
             // 
             this.metroLabel23.AutoSize = true;
             this.metroLabel23.FontSize = MetroFramework.MetroLabelSize.Small;
-            this.metroLabel23.Location = new System.Drawing.Point(4, 236);
+            this.metroLabel23.Location = new System.Drawing.Point(4, 158);
             this.metroLabel23.Name = "metroLabel23";
             this.metroLabel23.Size = new System.Drawing.Size(58, 15);
             this.metroLabel23.TabIndex = 82;
@@ -1229,7 +1289,7 @@
             // 
             this.pictureBox4.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox4.Image = global::PrinterPro.Properties.Resources.time;
-            this.pictureBox4.Location = new System.Drawing.Point(6, 188);
+            this.pictureBox4.Location = new System.Drawing.Point(6, 126);
             this.pictureBox4.Name = "pictureBox4";
             this.pictureBox4.Size = new System.Drawing.Size(28, 20);
             this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -1252,7 +1312,7 @@
             this.tbXRelative.CustomButton.Visible = false;
             this.tbXRelative.Lines = new string[] {
         "0"};
-            this.tbXRelative.Location = new System.Drawing.Point(69, 87);
+            this.tbXRelative.Location = new System.Drawing.Point(69, 63);
             this.tbXRelative.MaxLength = 32767;
             this.tbXRelative.Name = "tbXRelative";
             this.tbXRelative.PasswordChar = '\0';
@@ -1272,7 +1332,7 @@
             // 
             this.metroLabel28.AutoSize = true;
             this.metroLabel28.FontSize = MetroFramework.MetroLabelSize.Small;
-            this.metroLabel28.Location = new System.Drawing.Point(102, 67);
+            this.metroLabel28.Location = new System.Drawing.Point(102, 43);
             this.metroLabel28.Name = "metroLabel28";
             this.metroLabel28.Size = new System.Drawing.Size(27, 15);
             this.metroLabel28.TabIndex = 65;
@@ -1282,7 +1342,7 @@
             // 
             this.metroLabel36.AutoSize = true;
             this.metroLabel36.FontSize = MetroFramework.MetroLabelSize.Small;
-            this.metroLabel36.Location = new System.Drawing.Point(203, 91);
+            this.metroLabel36.Location = new System.Drawing.Point(203, 67);
             this.metroLabel36.Name = "metroLabel36";
             this.metroLabel36.Size = new System.Drawing.Size(27, 15);
             this.metroLabel36.TabIndex = 81;
@@ -1292,7 +1352,7 @@
             // 
             this.metroLabel29.AutoSize = true;
             this.metroLabel29.FontSize = MetroFramework.MetroLabelSize.Small;
-            this.metroLabel29.Location = new System.Drawing.Point(203, 67);
+            this.metroLabel29.Location = new System.Drawing.Point(203, 43);
             this.metroLabel29.Name = "metroLabel29";
             this.metroLabel29.Size = new System.Drawing.Size(27, 15);
             this.metroLabel29.TabIndex = 64;
@@ -1302,7 +1362,7 @@
             // 
             this.metroLabel37.AutoSize = true;
             this.metroLabel37.FontSize = MetroFramework.MetroLabelSize.Small;
-            this.metroLabel37.Location = new System.Drawing.Point(102, 93);
+            this.metroLabel37.Location = new System.Drawing.Point(102, 69);
             this.metroLabel37.Name = "metroLabel37";
             this.metroLabel37.Size = new System.Drawing.Size(27, 15);
             this.metroLabel37.TabIndex = 82;
@@ -1312,7 +1372,7 @@
             // 
             this.metroLabel31.AutoSize = true;
             this.metroLabel31.FontSize = MetroFramework.MetroLabelSize.Small;
-            this.metroLabel31.Location = new System.Drawing.Point(143, 93);
+            this.metroLabel31.Location = new System.Drawing.Point(143, 69);
             this.metroLabel31.Name = "metroLabel31";
             this.metroLabel31.Size = new System.Drawing.Size(22, 15);
             this.metroLabel31.TabIndex = 80;
@@ -1334,7 +1394,7 @@
             this.tbYRelative.CustomButton.Visible = false;
             this.tbYRelative.Lines = new string[] {
         "0"};
-            this.tbYRelative.Location = new System.Drawing.Point(169, 87);
+            this.tbYRelative.Location = new System.Drawing.Point(169, 63);
             this.tbYRelative.MaxLength = 32767;
             this.tbYRelative.Name = "tbYRelative";
             this.tbYRelative.PasswordChar = '\0';
@@ -1353,7 +1413,7 @@
             // metroLabel5
             // 
             this.metroLabel5.AutoSize = true;
-            this.metroLabel5.Location = new System.Drawing.Point(38, 149);
+            this.metroLabel5.Location = new System.Drawing.Point(31, 212);
             this.metroLabel5.Name = "metroLabel5";
             this.metroLabel5.Size = new System.Drawing.Size(44, 19);
             this.metroLabel5.TabIndex = 103;
@@ -1362,7 +1422,7 @@
             // metroLabel4
             // 
             this.metroLabel4.AutoSize = true;
-            this.metroLabel4.Location = new System.Drawing.Point(38, 126);
+            this.metroLabel4.Location = new System.Drawing.Point(31, 189);
             this.metroLabel4.Name = "metroLabel4";
             this.metroLabel4.Size = new System.Drawing.Size(44, 19);
             this.metroLabel4.TabIndex = 101;
@@ -1371,7 +1431,7 @@
             // togZAxis
             // 
             this.togZAxis.AutoSize = true;
-            this.togZAxis.Location = new System.Drawing.Point(129, 150);
+            this.togZAxis.Location = new System.Drawing.Point(122, 213);
             this.togZAxis.Name = "togZAxis";
             this.togZAxis.Size = new System.Drawing.Size(80, 16);
             this.togZAxis.TabIndex = 102;
@@ -1382,7 +1442,7 @@
             // togYAxis
             // 
             this.togYAxis.AutoSize = true;
-            this.togYAxis.Location = new System.Drawing.Point(129, 127);
+            this.togYAxis.Location = new System.Drawing.Point(122, 190);
             this.togYAxis.Name = "togYAxis";
             this.togYAxis.Size = new System.Drawing.Size(80, 16);
             this.togYAxis.TabIndex = 100;
@@ -1393,7 +1453,7 @@
             // metroLabel3
             // 
             this.metroLabel3.AutoSize = true;
-            this.metroLabel3.Location = new System.Drawing.Point(38, 102);
+            this.metroLabel3.Location = new System.Drawing.Point(31, 165);
             this.metroLabel3.Name = "metroLabel3";
             this.metroLabel3.Size = new System.Drawing.Size(44, 19);
             this.metroLabel3.TabIndex = 99;
@@ -1402,7 +1462,7 @@
             // togXAxis
             // 
             this.togXAxis.AutoSize = true;
-            this.togXAxis.Location = new System.Drawing.Point(129, 104);
+            this.togXAxis.Location = new System.Drawing.Point(122, 167);
             this.togXAxis.Name = "togXAxis";
             this.togXAxis.Size = new System.Drawing.Size(80, 16);
             this.togXAxis.TabIndex = 98;
@@ -1417,7 +1477,7 @@
             this.cbPrintMode.Items.AddRange(new object[] {
             "Inkjet",
             "On the fly"});
-            this.cbPrintMode.Location = new System.Drawing.Point(96, 18);
+            this.cbPrintMode.Location = new System.Drawing.Point(99, 55);
             this.cbPrintMode.Name = "cbPrintMode";
             this.cbPrintMode.Size = new System.Drawing.Size(121, 29);
             this.cbPrintMode.TabIndex = 90;
@@ -1440,32 +1500,6 @@
             this.lbPrintProgress.TabIndex = 3;
             this.lbPrintProgress.Text = "0%";
             // 
-            // panelXYStage
-            // 
-            this.panelXYStage.BackColor = System.Drawing.Color.Transparent;
-            this.panelXYStage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.panelXYStage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panelXYStage.Controls.Add(this.psPrint);
-            this.panelXYStage.HorizontalScrollbarBarColor = true;
-            this.panelXYStage.HorizontalScrollbarHighlightOnWheel = false;
-            this.panelXYStage.HorizontalScrollbarSize = 10;
-            this.panelXYStage.Location = new System.Drawing.Point(250, 6);
-            this.panelXYStage.Name = "panelXYStage";
-            this.panelXYStage.Size = new System.Drawing.Size(664, 458);
-            this.panelXYStage.TabIndex = 2;
-            this.panelXYStage.VerticalScrollbarBarColor = true;
-            this.panelXYStage.VerticalScrollbarHighlightOnWheel = false;
-            this.panelXYStage.VerticalScrollbarSize = 10;
-            // 
-            // psPrint
-            // 
-            this.psPrint.Location = new System.Drawing.Point(282, 179);
-            this.psPrint.Maximum = 100;
-            this.psPrint.Name = "psPrint";
-            this.psPrint.Size = new System.Drawing.Size(100, 100);
-            this.psPrint.TabIndex = 2;
-            this.psPrint.UseSelectable = true;
-            // 
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.metroPanel12);
@@ -1477,8 +1511,11 @@
             // 
             // metroPanel12
             // 
+            this.metroPanel12.Controls.Add(this.btnConnectHeaterPort);
             this.metroPanel12.Controls.Add(this.btnTempMonitor);
             this.metroPanel12.Controls.Add(this.btnRunCycle);
+            this.metroPanel12.Controls.Add(this.comHeaterPort);
+            this.metroPanel12.Controls.Add(this.metroLabel35);
             this.metroPanel12.Controls.Add(this.metroLabel53);
             this.metroPanel12.Controls.Add(this.metroLabel52);
             this.metroPanel12.Controls.Add(this.metroLabel51);
@@ -1528,9 +1565,21 @@
             this.metroPanel12.VerticalScrollbarHighlightOnWheel = false;
             this.metroPanel12.VerticalScrollbarSize = 10;
             // 
+            // btnConnectHeaterPort
+            // 
+            this.btnConnectHeaterPort.BackgroundImage = global::PrinterPro.Properties.Resources.connect;
+            this.btnConnectHeaterPort.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnConnectHeaterPort.FontWeight = MetroFramework.MetroButtonWeight.Regular;
+            this.btnConnectHeaterPort.Location = new System.Drawing.Point(869, 53);
+            this.btnConnectHeaterPort.Name = "btnConnectHeaterPort";
+            this.btnConnectHeaterPort.Size = new System.Drawing.Size(27, 29);
+            this.btnConnectHeaterPort.TabIndex = 30;
+            this.btnConnectHeaterPort.UseSelectable = true;
+            this.btnConnectHeaterPort.Click += new System.EventHandler(this.btnConnectHeaterPort_Click);
+            // 
             // btnTempMonitor
             // 
-            this.btnTempMonitor.Location = new System.Drawing.Point(750, 44);
+            this.btnTempMonitor.Location = new System.Drawing.Point(698, 88);
             this.btnTempMonitor.Name = "btnTempMonitor";
             this.btnTempMonitor.Size = new System.Drawing.Size(96, 23);
             this.btnTempMonitor.TabIndex = 61;
@@ -1540,7 +1589,7 @@
             // 
             // btnRunCycle
             // 
-            this.btnRunCycle.Location = new System.Drawing.Point(750, 73);
+            this.btnRunCycle.Location = new System.Drawing.Point(800, 88);
             this.btnRunCycle.Name = "btnRunCycle";
             this.btnRunCycle.Size = new System.Drawing.Size(96, 23);
             this.btnRunCycle.TabIndex = 60;
@@ -1548,12 +1597,31 @@
             this.btnRunCycle.UseSelectable = true;
             this.btnRunCycle.Click += new System.EventHandler(this.btnRunCycle_Click);
             // 
+            // comHeaterPort
+            // 
+            this.comHeaterPort.FormattingEnabled = true;
+            this.comHeaterPort.ItemHeight = 23;
+            this.comHeaterPort.Location = new System.Drawing.Point(698, 53);
+            this.comHeaterPort.Name = "comHeaterPort";
+            this.comHeaterPort.Size = new System.Drawing.Size(165, 29);
+            this.comHeaterPort.TabIndex = 28;
+            this.comHeaterPort.UseSelectable = true;
+            // 
+            // metroLabel35
+            // 
+            this.metroLabel35.AutoSize = true;
+            this.metroLabel35.Location = new System.Drawing.Point(698, 23);
+            this.metroLabel35.Name = "metroLabel35";
+            this.metroLabel35.Size = new System.Drawing.Size(77, 19);
+            this.metroLabel35.TabIndex = 27;
+            this.metroLabel35.Text = "Heater Port";
+            // 
             // metroLabel53
             // 
             this.metroLabel53.AutoSize = true;
             this.metroLabel53.FontWeight = MetroFramework.MetroLabelWeight.Regular;
             this.metroLabel53.ForeColor = System.Drawing.Color.Transparent;
-            this.metroLabel53.Location = new System.Drawing.Point(38, 13);
+            this.metroLabel53.Location = new System.Drawing.Point(46, 23);
             this.metroLabel53.Name = "metroLabel53";
             this.metroLabel53.Size = new System.Drawing.Size(43, 19);
             this.metroLabel53.TabIndex = 59;
@@ -1564,7 +1632,7 @@
             this.metroLabel52.AutoSize = true;
             this.metroLabel52.FontWeight = MetroFramework.MetroLabelWeight.Regular;
             this.metroLabel52.ForeColor = System.Drawing.Color.Transparent;
-            this.metroLabel52.Location = new System.Drawing.Point(566, 13);
+            this.metroLabel52.Location = new System.Drawing.Point(534, 23);
             this.metroLabel52.Name = "metroLabel52";
             this.metroLabel52.Size = new System.Drawing.Size(17, 19);
             this.metroLabel52.TabIndex = 58;
@@ -1575,7 +1643,7 @@
             this.metroLabel51.AutoSize = true;
             this.metroLabel51.FontWeight = MetroFramework.MetroLabelWeight.Regular;
             this.metroLabel51.ForeColor = System.Drawing.Color.Transparent;
-            this.metroLabel51.Location = new System.Drawing.Point(355, 13);
+            this.metroLabel51.Location = new System.Drawing.Point(343, 23);
             this.metroLabel51.Name = "metroLabel51";
             this.metroLabel51.Size = new System.Drawing.Size(17, 19);
             this.metroLabel51.TabIndex = 57;
@@ -1586,7 +1654,7 @@
             this.metroLabel50.AutoSize = true;
             this.metroLabel50.FontWeight = MetroFramework.MetroLabelWeight.Regular;
             this.metroLabel50.ForeColor = System.Drawing.Color.Transparent;
-            this.metroLabel50.Location = new System.Drawing.Point(509, 13);
+            this.metroLabel50.Location = new System.Drawing.Point(477, 23);
             this.metroLabel50.Name = "metroLabel50";
             this.metroLabel50.Size = new System.Drawing.Size(17, 19);
             this.metroLabel50.TabIndex = 56;
@@ -1597,7 +1665,7 @@
             this.metroLabel49.AutoSize = true;
             this.metroLabel49.FontWeight = MetroFramework.MetroLabelWeight.Regular;
             this.metroLabel49.ForeColor = System.Drawing.Color.Transparent;
-            this.metroLabel49.Location = new System.Drawing.Point(299, 13);
+            this.metroLabel49.Location = new System.Drawing.Point(287, 23);
             this.metroLabel49.Name = "metroLabel49";
             this.metroLabel49.Size = new System.Drawing.Size(17, 19);
             this.metroLabel49.TabIndex = 55;
@@ -1608,7 +1676,7 @@
             this.metroLabel48.AutoSize = true;
             this.metroLabel48.FontWeight = MetroFramework.MetroLabelWeight.Regular;
             this.metroLabel48.ForeColor = System.Drawing.Color.Transparent;
-            this.metroLabel48.Location = new System.Drawing.Point(454, 13);
+            this.metroLabel48.Location = new System.Drawing.Point(422, 23);
             this.metroLabel48.Name = "metroLabel48";
             this.metroLabel48.Size = new System.Drawing.Size(17, 19);
             this.metroLabel48.TabIndex = 54;
@@ -1619,7 +1687,7 @@
             this.metroLabel47.AutoSize = true;
             this.metroLabel47.FontWeight = MetroFramework.MetroLabelWeight.Regular;
             this.metroLabel47.ForeColor = System.Drawing.Color.Transparent;
-            this.metroLabel47.Location = new System.Drawing.Point(243, 13);
+            this.metroLabel47.Location = new System.Drawing.Point(231, 23);
             this.metroLabel47.Name = "metroLabel47";
             this.metroLabel47.Size = new System.Drawing.Size(17, 19);
             this.metroLabel47.TabIndex = 53;
@@ -1630,7 +1698,7 @@
             this.metroLabel46.AutoSize = true;
             this.metroLabel46.FontWeight = MetroFramework.MetroLabelWeight.Regular;
             this.metroLabel46.ForeColor = System.Drawing.Color.Transparent;
-            this.metroLabel46.Location = new System.Drawing.Point(550, 104);
+            this.metroLabel46.Location = new System.Drawing.Point(518, 114);
             this.metroLabel46.Name = "metroLabel46";
             this.metroLabel46.Size = new System.Drawing.Size(44, 19);
             this.metroLabel46.TabIndex = 52;
@@ -1641,7 +1709,7 @@
             this.metroLabel45.AutoSize = true;
             this.metroLabel45.FontWeight = MetroFramework.MetroLabelWeight.Regular;
             this.metroLabel45.ForeColor = System.Drawing.Color.Transparent;
-            this.metroLabel45.Location = new System.Drawing.Point(664, 13);
+            this.metroLabel45.Location = new System.Drawing.Point(612, 23);
             this.metroLabel45.Name = "metroLabel45";
             this.metroLabel45.Size = new System.Drawing.Size(27, 19);
             this.metroLabel45.TabIndex = 51;
@@ -1652,7 +1720,7 @@
             this.metroLabel44.AutoSize = true;
             this.metroLabel44.FontWeight = MetroFramework.MetroLabelWeight.Regular;
             this.metroLabel44.ForeColor = System.Drawing.Color.Transparent;
-            this.metroLabel44.Location = new System.Drawing.Point(135, 13);
+            this.metroLabel44.Location = new System.Drawing.Point(143, 23);
             this.metroLabel44.Name = "metroLabel44";
             this.metroLabel44.Size = new System.Drawing.Size(29, 19);
             this.metroLabel44.TabIndex = 50;
@@ -1675,7 +1743,7 @@
             this.stageEXT_time.CustomButton.Visible = false;
             this.stageEXT_time.Lines = new string[] {
         "120"};
-            this.stageEXT_time.Location = new System.Drawing.Point(652, 74);
+            this.stageEXT_time.Location = new System.Drawing.Point(600, 84);
             this.stageEXT_time.MaxLength = 32767;
             this.stageEXT_time.Name = "stageEXT_time";
             this.stageEXT_time.PasswordChar = '\0';
@@ -1709,7 +1777,7 @@
             this.stageEXT_temp.CustomButton.Visible = false;
             this.stageEXT_temp.Lines = new string[] {
         "60"};
-            this.stageEXT_temp.Location = new System.Drawing.Point(652, 43);
+            this.stageEXT_temp.Location = new System.Drawing.Point(600, 53);
             this.stageEXT_temp.MaxLength = 32767;
             this.stageEXT_temp.Name = "stageEXT_temp";
             this.stageEXT_temp.PasswordChar = '\0';
@@ -1743,7 +1811,7 @@
             this.stagePRE_time.CustomButton.Visible = false;
             this.stagePRE_time.Lines = new string[] {
         "30"};
-            this.stagePRE_time.Location = new System.Drawing.Point(128, 74);
+            this.stagePRE_time.Location = new System.Drawing.Point(136, 84);
             this.stagePRE_time.MaxLength = 32767;
             this.stagePRE_time.Name = "stagePRE_time";
             this.stagePRE_time.PasswordChar = '\0';
@@ -1777,7 +1845,7 @@
             this.stagePRE_temp.CustomButton.Visible = false;
             this.stagePRE_temp.Lines = new string[] {
         "60"};
-            this.stagePRE_temp.Location = new System.Drawing.Point(128, 43);
+            this.stagePRE_temp.Location = new System.Drawing.Point(136, 53);
             this.stagePRE_temp.MaxLength = 32767;
             this.stagePRE_temp.Name = "stagePRE_temp";
             this.stagePRE_temp.PasswordChar = '\0';
@@ -1811,7 +1879,7 @@
             this.stage2_cycles.CustomButton.Visible = false;
             this.stage2_cycles.Lines = new string[] {
         "0"};
-            this.stage2_cycles.Location = new System.Drawing.Point(494, 104);
+            this.stage2_cycles.Location = new System.Drawing.Point(462, 114);
             this.stage2_cycles.MaxLength = 32767;
             this.stage2_cycles.Name = "stage2_cycles";
             this.stage2_cycles.PasswordChar = '\0';
@@ -1833,7 +1901,7 @@
             this.metroLabel43.AutoSize = true;
             this.metroLabel43.FontWeight = MetroFramework.MetroLabelWeight.Regular;
             this.metroLabel43.ForeColor = System.Drawing.Color.Transparent;
-            this.metroLabel43.Location = new System.Drawing.Point(339, 104);
+            this.metroLabel43.Location = new System.Drawing.Point(327, 114);
             this.metroLabel43.Name = "metroLabel43";
             this.metroLabel43.Size = new System.Drawing.Size(44, 19);
             this.metroLabel43.TabIndex = 43;
@@ -1856,7 +1924,7 @@
             this.stage1_cycles.CustomButton.Visible = false;
             this.stage1_cycles.Lines = new string[] {
         "40"};
-            this.stage1_cycles.Location = new System.Drawing.Point(283, 104);
+            this.stage1_cycles.Location = new System.Drawing.Point(271, 114);
             this.stage1_cycles.MaxLength = 32767;
             this.stage1_cycles.Name = "stage1_cycles";
             this.stage1_cycles.PasswordChar = '\0';
@@ -1889,7 +1957,7 @@
             this.stage2_3_time.CustomButton.UseSelectable = true;
             this.stage2_3_time.CustomButton.Visible = false;
             this.stage2_3_time.Lines = new string[0];
-            this.stage2_3_time.Location = new System.Drawing.Point(550, 74);
+            this.stage2_3_time.Location = new System.Drawing.Point(518, 84);
             this.stage2_3_time.MaxLength = 32767;
             this.stage2_3_time.Name = "stage2_3_time";
             this.stage2_3_time.PasswordChar = '\0';
@@ -1921,7 +1989,7 @@
             this.stage2_3_temp.CustomButton.UseSelectable = true;
             this.stage2_3_temp.CustomButton.Visible = false;
             this.stage2_3_temp.Lines = new string[0];
-            this.stage2_3_temp.Location = new System.Drawing.Point(550, 43);
+            this.stage2_3_temp.Location = new System.Drawing.Point(518, 53);
             this.stage2_3_temp.MaxLength = 32767;
             this.stage2_3_temp.Name = "stage2_3_temp";
             this.stage2_3_temp.PasswordChar = '\0';
@@ -1953,7 +2021,7 @@
             this.stage2_2_time.CustomButton.UseSelectable = true;
             this.stage2_2_time.CustomButton.Visible = false;
             this.stage2_2_time.Lines = new string[0];
-            this.stage2_2_time.Location = new System.Drawing.Point(494, 74);
+            this.stage2_2_time.Location = new System.Drawing.Point(462, 84);
             this.stage2_2_time.MaxLength = 32767;
             this.stage2_2_time.Name = "stage2_2_time";
             this.stage2_2_time.PasswordChar = '\0';
@@ -1985,7 +2053,7 @@
             this.stage2_2_temp.CustomButton.UseSelectable = true;
             this.stage2_2_temp.CustomButton.Visible = false;
             this.stage2_2_temp.Lines = new string[0];
-            this.stage2_2_temp.Location = new System.Drawing.Point(494, 43);
+            this.stage2_2_temp.Location = new System.Drawing.Point(462, 53);
             this.stage2_2_temp.MaxLength = 32767;
             this.stage2_2_temp.Name = "stage2_2_temp";
             this.stage2_2_temp.PasswordChar = '\0';
@@ -2017,7 +2085,7 @@
             this.stage2_1_time.CustomButton.UseSelectable = true;
             this.stage2_1_time.CustomButton.Visible = false;
             this.stage2_1_time.Lines = new string[0];
-            this.stage2_1_time.Location = new System.Drawing.Point(438, 74);
+            this.stage2_1_time.Location = new System.Drawing.Point(406, 84);
             this.stage2_1_time.MaxLength = 32767;
             this.stage2_1_time.Name = "stage2_1_time";
             this.stage2_1_time.PasswordChar = '\0';
@@ -2049,7 +2117,7 @@
             this.stage2_1_temp.CustomButton.UseSelectable = true;
             this.stage2_1_temp.CustomButton.Visible = false;
             this.stage2_1_temp.Lines = new string[0];
-            this.stage2_1_temp.Location = new System.Drawing.Point(438, 43);
+            this.stage2_1_temp.Location = new System.Drawing.Point(406, 53);
             this.stage2_1_temp.MaxLength = 32767;
             this.stage2_1_temp.Name = "stage2_1_temp";
             this.stage2_1_temp.PasswordChar = '\0';
@@ -2082,7 +2150,7 @@
             this.stage1_3_time.CustomButton.Visible = false;
             this.stage1_3_time.Lines = new string[] {
         "0"};
-            this.stage1_3_time.Location = new System.Drawing.Point(339, 74);
+            this.stage1_3_time.Location = new System.Drawing.Point(327, 84);
             this.stage1_3_time.MaxLength = 32767;
             this.stage1_3_time.Name = "stage1_3_time";
             this.stage1_3_time.PasswordChar = '\0';
@@ -2116,7 +2184,7 @@
             this.stage1_3_temp.CustomButton.Visible = false;
             this.stage1_3_temp.Lines = new string[] {
         "0"};
-            this.stage1_3_temp.Location = new System.Drawing.Point(339, 43);
+            this.stage1_3_temp.Location = new System.Drawing.Point(327, 53);
             this.stage1_3_temp.MaxLength = 32767;
             this.stage1_3_temp.Name = "stage1_3_temp";
             this.stage1_3_temp.PasswordChar = '\0';
@@ -2150,7 +2218,7 @@
             this.stage1_2_time.CustomButton.Visible = false;
             this.stage1_2_time.Lines = new string[] {
         "15"};
-            this.stage1_2_time.Location = new System.Drawing.Point(283, 74);
+            this.stage1_2_time.Location = new System.Drawing.Point(271, 84);
             this.stage1_2_time.MaxLength = 32767;
             this.stage1_2_time.Name = "stage1_2_time";
             this.stage1_2_time.PasswordChar = '\0';
@@ -2184,7 +2252,7 @@
             this.stage1_2_temp.CustomButton.Visible = false;
             this.stage1_2_temp.Lines = new string[] {
         "60"};
-            this.stage1_2_temp.Location = new System.Drawing.Point(283, 43);
+            this.stage1_2_temp.Location = new System.Drawing.Point(271, 53);
             this.stage1_2_temp.MaxLength = 32767;
             this.stage1_2_temp.Name = "stage1_2_temp";
             this.stage1_2_temp.PasswordChar = '\0';
@@ -2206,7 +2274,7 @@
             this.metroLabel40.AutoSize = true;
             this.metroLabel40.FontWeight = MetroFramework.MetroLabelWeight.Regular;
             this.metroLabel40.ForeColor = System.Drawing.Color.Transparent;
-            this.metroLabel40.Location = new System.Drawing.Point(38, 72);
+            this.metroLabel40.Location = new System.Drawing.Point(46, 82);
             this.metroLabel40.Name = "metroLabel40";
             this.metroLabel40.Size = new System.Drawing.Size(65, 19);
             this.metroLabel40.TabIndex = 11;
@@ -2229,7 +2297,7 @@
             this.stage1_1_time.CustomButton.Visible = false;
             this.stage1_1_time.Lines = new string[] {
         "5"};
-            this.stage1_1_time.Location = new System.Drawing.Point(227, 74);
+            this.stage1_1_time.Location = new System.Drawing.Point(215, 84);
             this.stage1_1_time.MaxLength = 32767;
             this.stage1_1_time.Name = "stage1_1_time";
             this.stage1_1_time.PasswordChar = '\0';
@@ -2251,7 +2319,7 @@
             this.metroLabel39.AutoSize = true;
             this.metroLabel39.FontWeight = MetroFramework.MetroLabelWeight.Regular;
             this.metroLabel39.ForeColor = System.Drawing.Color.Transparent;
-            this.metroLabel39.Location = new System.Drawing.Point(38, 43);
+            this.metroLabel39.Location = new System.Drawing.Point(46, 53);
             this.metroLabel39.Name = "metroLabel39";
             this.metroLabel39.Size = new System.Drawing.Size(70, 19);
             this.metroLabel39.TabIndex = 9;
@@ -2274,7 +2342,7 @@
             this.stage1_1_temp.CustomButton.Visible = false;
             this.stage1_1_temp.Lines = new string[] {
         "95"};
-            this.stage1_1_temp.Location = new System.Drawing.Point(227, 43);
+            this.stage1_1_temp.Location = new System.Drawing.Point(215, 53);
             this.stage1_1_temp.MaxLength = 32767;
             this.stage1_1_temp.Name = "stage1_1_temp";
             this.stage1_1_temp.PasswordChar = '\0';
@@ -2348,19 +2416,19 @@
             // 
             // chartTemperature
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chartTemperature.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.chartTemperature.Legends.Add(legend1);
-            this.chartTemperature.Location = new System.Drawing.Point(3, 124);
+            chartArea3.Name = "ChartArea1";
+            this.chartTemperature.ChartAreas.Add(chartArea3);
+            legend3.Name = "Legend1";
+            this.chartTemperature.Legends.Add(legend3);
+            this.chartTemperature.Location = new System.Drawing.Point(3, 133);
             this.chartTemperature.Name = "chartTemperature";
             this.chartTemperature.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Pastel;
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series1.Legend = "Legend1";
-            series1.Name = "Temperature";
-            this.chartTemperature.Series.Add(series1);
-            this.chartTemperature.Size = new System.Drawing.Size(913, 371);
+            series3.ChartArea = "ChartArea1";
+            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series3.Legend = "Legend1";
+            series3.Name = "Temperature";
+            this.chartTemperature.Series.Add(series3);
+            this.chartTemperature.Size = new System.Drawing.Size(913, 362);
             this.chartTemperature.TabIndex = 2;
             this.chartTemperature.Text = "chart1";
             // 
@@ -2371,7 +2439,7 @@
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Size = new System.Drawing.Size(919, 501);
             this.tabPage2.TabIndex = 2;
-            this.tabPage2.Text = "Preference";
+            this.tabPage2.Text = "Capture";
             // 
             // metroPanel1
             // 
@@ -2390,12 +2458,6 @@
             // 
             // metroPanel9
             // 
-            this.metroPanel9.Controls.Add(this.btnConnectHeaterPort);
-            this.metroPanel9.Controls.Add(this.btnConnectValvePort);
-            this.metroPanel9.Controls.Add(this.metroLabel34);
-            this.metroPanel9.Controls.Add(this.comHeaterPort);
-            this.metroPanel9.Controls.Add(this.metroLabel35);
-            this.metroPanel9.Controls.Add(this.comAirValve);
             this.metroPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
             this.metroPanel9.HorizontalScrollbarBarColor = true;
             this.metroPanel9.HorizontalScrollbarHighlightOnWheel = false;
@@ -2407,69 +2469,6 @@
             this.metroPanel9.VerticalScrollbarBarColor = true;
             this.metroPanel9.VerticalScrollbarHighlightOnWheel = false;
             this.metroPanel9.VerticalScrollbarSize = 10;
-            // 
-            // btnConnectHeaterPort
-            // 
-            this.btnConnectHeaterPort.BackgroundImage = global::PrinterPro.Properties.Resources.connect;
-            this.btnConnectHeaterPort.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnConnectHeaterPort.FontWeight = MetroFramework.MetroButtonWeight.Regular;
-            this.btnConnectHeaterPort.Location = new System.Drawing.Point(835, 46);
-            this.btnConnectHeaterPort.Name = "btnConnectHeaterPort";
-            this.btnConnectHeaterPort.Size = new System.Drawing.Size(27, 29);
-            this.btnConnectHeaterPort.TabIndex = 30;
-            this.btnConnectHeaterPort.UseSelectable = true;
-            this.btnConnectHeaterPort.Click += new System.EventHandler(this.btnConnectHeaterPort_Click);
-            // 
-            // btnConnectValvePort
-            // 
-            this.btnConnectValvePort.BackgroundImage = global::PrinterPro.Properties.Resources.connect;
-            this.btnConnectValvePort.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnConnectValvePort.FontWeight = MetroFramework.MetroButtonWeight.Regular;
-            this.btnConnectValvePort.Location = new System.Drawing.Point(389, 46);
-            this.btnConnectValvePort.Name = "btnConnectValvePort";
-            this.btnConnectValvePort.Size = new System.Drawing.Size(27, 29);
-            this.btnConnectValvePort.TabIndex = 29;
-            this.btnConnectValvePort.UseSelectable = true;
-            // 
-            // metroLabel34
-            // 
-            this.metroLabel34.AutoSize = true;
-            this.metroLabel34.Location = new System.Drawing.Point(7, 52);
-            this.metroLabel34.Name = "metroLabel34";
-            this.metroLabel34.Size = new System.Drawing.Size(90, 19);
-            this.metroLabel34.TabIndex = 25;
-            this.metroLabel34.Text = "Air Valve Port";
-            // 
-            // comHeaterPort
-            // 
-            this.comHeaterPort.FormattingEnabled = true;
-            this.comHeaterPort.ItemHeight = 23;
-            this.comHeaterPort.Location = new System.Drawing.Point(549, 46);
-            this.comHeaterPort.Name = "comHeaterPort";
-            this.comHeaterPort.Size = new System.Drawing.Size(280, 29);
-            this.comHeaterPort.TabIndex = 28;
-            this.comHeaterPort.UseSelectable = true;
-            // 
-            // metroLabel35
-            // 
-            this.metroLabel35.AutoSize = true;
-            this.metroLabel35.Location = new System.Drawing.Point(466, 52);
-            this.metroLabel35.Name = "metroLabel35";
-            this.metroLabel35.Size = new System.Drawing.Size(77, 19);
-            this.metroLabel35.TabIndex = 27;
-            this.metroLabel35.Text = "Heater Port";
-            // 
-            // comAirValve
-            // 
-            this.comAirValve.BackColor = System.Drawing.Color.Transparent;
-            this.comAirValve.FormattingEnabled = true;
-            this.comAirValve.ItemHeight = 23;
-            this.comAirValve.Location = new System.Drawing.Point(103, 46);
-            this.comAirValve.Name = "comAirValve";
-            this.comAirValve.Size = new System.Drawing.Size(280, 29);
-            this.comAirValve.TabIndex = 26;
-            this.comAirValve.UseCustomBackColor = true;
-            this.comAirValve.UseSelectable = true;
             // 
             // MainForm
             // 
@@ -2507,15 +2506,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
-            this.panelXYStage.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.metroPanel12.ResumeLayout(false);
             this.metroPanel12.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chartTemperature)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.metroPanel1.ResumeLayout(false);
-            this.metroPanel9.ResumeLayout(false);
-            this.metroPanel9.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -2550,7 +2546,6 @@
         private MetroFramework.Controls.MetroPanel metroPanel9;
         private MetroFramework.Controls.MetroButton btnConnectHeaterPort;
         private MetroFramework.Controls.MetroButton btnConnectValvePort;
-        private MetroFramework.Controls.MetroLabel metroLabel34;
         private MetroFramework.Controls.MetroComboBox comHeaterPort;
         private MetroFramework.Controls.MetroLabel metroLabel35;
         private MetroFramework.Controls.MetroComboBox comAirValve;
@@ -2563,7 +2558,6 @@
         private MetroFramework.Controls.MetroPanel panelXYStage;
         private MetroFramework.Controls.MetroLabel lbPrintProgress;
         private MetroFramework.Controls.MetroProgressBar pbPrint;
-        private MetroFramework.Controls.MetroProgressSpinner psPrint;
         private MetroFramework.Controls.MetroPanel metroPanel10;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pictureBox2;
@@ -2656,5 +2650,7 @@
         private MetroFramework.Controls.MetroLabel metroLabel53;
         private MetroFramework.Controls.MetroButton btnRunCycle;
         private MetroFramework.Controls.MetroButton btnTempMonitor;
+        private AForge.Controls.VideoSourcePlayer videoSourcePlayer;
+        private MetroFramework.Controls.MetroButton btnCameraSettings;
     }
 }
