@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<DynamicHelp xmlns="http://msdn.microsoft.com/vsdata/xsd/vsdh.xsd" xmlns:xsi="http://www.w3.org/2000/10/XMLSchema-instance" xsi:schemaLocation="http://msdn.microsoft.com/vsdata/xsd/vsdh.xsd">	
+   <LINKGROUP ID="Printer Pro" Title="Printer Pro Reference Help" Priority="2100">
+      <GLYPH Expanded="vs:/ctxhelp_show.gif" Collapsed="vs:/ctxhelp_hide.gif"/>
+   </LINKGROUP>
+
+
+   <Context>
+      <Keywords>
+         <KItem Name="PrinterPro.MainForm" />
+      </Keywords>
+      <Links>
+         <LItem URL="ms-its:Printer Pro.chm::/topic_0000000000000000.html" LinkGroup="Printer Pro">MainForm Class</LItem>
+      </Links>
+   </Context>
+   
+
+   <Context>
+      <Keywords>
+         <KItem Name="PrinterPro.MainForm.MainForm" />
+      </Keywords>
+      <Links>
+         <LItem URL="ms-its:Printer Pro.chm::/topic_0000000000000001.html" LinkGroup="Printer Pro">MainForm Constructor</LItem>
+      </Links>
+   </Context>
+   
+
+   <Context>
+      <Keywords>
+         <KItem Name="Printer Pro Reference" />
+      </Keywords>
+      <Links>
+         <LItem URL="ms-its:Printer Pro.chm::/topic_0000000000000002.html" LinkGroup="Printer Pro">Printer Pro Reference</LItem>
+      </Links>
+   </Context>
+   
+
+</DynamicHelp>
+

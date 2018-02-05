@@ -70,15 +70,117 @@
         </member>
         <member name="T:PrinterPro.MainForm">
             <summary>
-            打印程序主窗口
+            打印程序主窗口类，包括主界面上所有按钮的响应事件及逻辑控制
             </summary>
-            <remarks>
-            </remarks>
         </member>
         <member name="M:PrinterPro.MainForm.#ctor">
             <summary>
-            
+            主窗口构造函数
             </summary>
+        </member>
+        <member name="M:PrinterPro.MainForm.MainForm_Load(System.Object,System.EventArgs)">
+            <summary>
+            窗口加载完毕事件回调函数
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:PrinterPro.MainForm.OnFormClosing(System.Windows.Forms.FormClosingEventArgs)">
+            <summary>
+            窗口关闭事件回调函数
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:PrinterPro.MainForm.initSurface">
+            <summary>
+            刷新界面元素（端口列表、波形预览等）
+            </summary>
+        </member>
+        <member name="M:PrinterPro.MainForm.connectValvePort">
+            <summary>
+            连接气阀串口
+            </summary>
+        </member>
+        <member name="M:PrinterPro.MainForm.connectHeaterPort">
+            <summary>
+            连接加热板串口
+            </summary>
+        </member>
+        <member name="M:PrinterPro.MainForm.refreshValvePort">
+            <summary>
+            刷新气阀串口列表
+            </summary>
+        </member>
+        <member name="M:PrinterPro.MainForm.refreshHeaterPort">
+            <summary>
+            刷新热板串口列表
+            </summary>
+        </member>
+        <member name="M:PrinterPro.MainForm.valvePort_Click(System.Object,System.EventArgs)">
+            <summary>
+            气阀串口列表点击响应事件
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:PrinterPro.MainForm.heaterPort_Click(System.Object,System.EventArgs)">
+            <summary>
+            热板串口列表点击响应事件
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:PrinterPro.MainForm.btnConnectValvePort_Click(System.Object,System.EventArgs)">
+            <summary>
+            气阀连接按键响应事件
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:PrinterPro.MainForm.btnConnectHeaterPort_Click(System.Object,System.EventArgs)">
+            <summary>
+            热板连接按键响应事件
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:PrinterPro.MainForm.loadFile">
+            <summary>
+            加载CSV文件，并显示在新的DataGrid上
+            </summary>
+        </member>
+        <member name="M:PrinterPro.MainForm.loadData">
+            <summary>
+            加载新的文件Mode
+            </summary>
+        </member>
+        <member name="M:PrinterPro.MainForm.btnAddMode_Click(System.Object,System.EventArgs)">
+            <summary>
+            增加文件按钮响应事件
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:PrinterPro.MainForm.btnOpenFile_Click(System.Object,System.EventArgs)">
+            <summary>
+            打开文件按钮响应事件
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:PrinterPro.MainForm.btnModifyFile_Click(System.Object,System.EventArgs)">
+            <summary>
+            修改文件按钮响应事件
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:PrinterPro.MainForm.btnDeleteMode_Click(System.Object,System.EventArgs)">
+            <summary>
+            删除文件按钮响应事件
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
         </member>
         <member name="F:PrinterPro.MainForm.components">
             <summary>

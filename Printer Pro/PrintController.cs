@@ -156,7 +156,7 @@ namespace PrinterPro
                 }
                 // The following sleeping time saves the life of out-of-thread X Axis control. Without this compulsory
                 // delay, next absolute move will probably be omitted.
-                Thread.Sleep((int)(Data.xDistance * Data.cols / Data.workSpeed) * 1000 + (int)accnBufferTime + 100);
+                Thread.Sleep((int)(Data.xDistance * Data.cols / Data.workSpeed) * 1000 + (int)accnBufferTime + 300);
                 Thread.Sleep(Data.waitTime);
             }
             finishPrintEventHandler.Invoke(new object(), new EventArgs());

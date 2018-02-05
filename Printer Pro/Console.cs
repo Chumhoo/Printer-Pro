@@ -10,6 +10,8 @@ namespace PrinterPro
         private EventHandler homeCompleteHandler;
         private float xMax = 0, yMax = 0;
         private bool XEnable, YEnable, ZEnable;
+        private int plDirection = 0, plLimSwitch = 0;
+        private float pfHomeVel = 0, pfZeroOffset = 0;
 
         public Console(bool _XEnable, bool _YEnable, bool _ZEnable)
         {
@@ -56,7 +58,9 @@ namespace PrinterPro
                 xMax = MotorX.GetStageAxisInfo_MaxPos(0);
                 yMax = MotorY.GetStageAxisInfo_MaxPos(0);
 
-                // MotorX.EnableEventDlg(false);
+                MotorX.EnableEventDlg(false);
+                MotorY.EnableEventDlg(false);
+                MotorZ.EnableEventDlg(false);
 
                 if (autoHome)
                 {
@@ -83,8 +87,14 @@ namespace PrinterPro
             {}
         }
 
-        private int plDirection = 0, plLimSwitch = 0;
-        private float pfHomeVel = 0, pfZeroOffset = 0;
+        public void MoveHome(EventHandler handler)
+        {
+            homeCompleteHandler = handler;
+
+            if (XEnable) moveXHome();
+            if (YEnable) moveYHome();
+            if (ZEnable) moveZHome();
+        }
 
         public void moveXHome()
         {
@@ -115,18 +125,9 @@ namespace PrinterPro
             MotorZ.MoveHome(0, false);
         }
 
-        public void MoveHome(EventHandler handler)
+        private void MotorX_HomeComplete(object sender, AxMG17MotorLib._DMG17MotorEvents_HomeCompleteEvent e)
         {
-            homeCompleteHandler = handler;
-
-            if (XEnable) moveXHome();
-            if (YEnable) moveYHome();
-            if (ZEnable) moveZHome();
-        }
-
-        private void MotorZ_HomeComplete(object sender, AxMG17MotorLib._DMG17MotorEvents_HomeCompleteEvent e)
-        {
-            ZHomeReady = true;
+            XHomeReady = true;
             if ((XHomeReady || !XEnable) && (YHomeReady || !YEnable) && (ZHomeReady || !ZEnable))
             {
                 homeCompleteHandler.Invoke(sender, new EventArgs());
@@ -142,9 +143,9 @@ namespace PrinterPro
             }
         }
 
-        private void MotorX_HomeComplete(object sender, AxMG17MotorLib._DMG17MotorEvents_HomeCompleteEvent e)
+        private void MotorZ_HomeComplete(object sender, AxMG17MotorLib._DMG17MotorEvents_HomeCompleteEvent e)
         {
-            XHomeReady = true;
+            ZHomeReady = true;
             if ((XHomeReady || !XEnable) && (YHomeReady || !YEnable) && (ZHomeReady || !ZEnable))
             {
                 homeCompleteHandler.Invoke(sender, new EventArgs());

@@ -25,8 +25,6 @@ C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\ob
 C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\PrinterPro.Loader.resources
 C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\PrinterPro.MainForm.resources
 C:\Users\Administrator\Desktop\Project\Printer 3.0 - UI - improve\Printer 3.0\obj\Debug\PrinterPro.Properties.Resources.resources
-C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\bin\Debug\Printer Pro.exe.config
-C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\bin\Debug\Printer Pro.exe
 C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\bin\Debug\Printer Pro.pdb
 C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\bin\Debug\MetroFramework.Design.dll
 C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\bin\Debug\MetroFramework.dll
@@ -50,7 +48,6 @@ C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\obj\Debug\Printer
 C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\obj\Debug\PrinterPro.Properties.Resources.resources
 C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\obj\Debug\Printer Pro.csproj.GenerateResource.Cache
 C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\obj\Debug\Printer Pro.csproj.CoreCompileInputs.cache
-C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\obj\Debug\Printer Pro.exe
 C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\obj\Debug\Printer Pro.pdb
 C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\obj\Debug\PrinterPro.AddMode.resources
 C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\bin\Debug\AForge.Controls.dll
@@ -66,3 +63,6 @@ C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\bin\Debug\AForge.
 C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\bin\Debug\AForge.Video.xml
 C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\bin\Debug\AForge.Video.DirectShow.xml
 C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\bin\Debug\Printer Pro.xml
+C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\bin\Debug\Printer Pro.exe.config
+C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\bin\Debug\Printer Pro.exe
+C:\Users\Administrator\Desktop\Project\Printer Pro\Printer Pro\obj\Debug\Printer Pro.exe

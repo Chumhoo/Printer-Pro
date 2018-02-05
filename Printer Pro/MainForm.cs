@@ -13,23 +13,31 @@ using System.Text.RegularExpressions;
 namespace PrinterPro
 {
     /// <summary>
-    /// 打印程序主窗口
+    /// 打印程序主窗口类，包括主界面上所有按钮的响应事件及逻辑控制
     /// </summary>
-    /// <remarks>
-    /// </remarks>
     public partial class MainForm : MetroForm
     {
         #region 变量声明
 
+        // 参数常量
+        private const int ASCII_ZERO = 48;
+        private const string DEFAULT_AIR_COM = "COM4";
+        private const string DEFAULT_HEAT_COM = "COM7";
+        // 参数变量
+        private long timeUsed = 0;
+        private bool homeReady = false, fileReady = false, consoleReady = false;
+        private float savedX = 0, savedY = 0;
+        private double temperature = 0, temperatureTarget = 0;
+
+        // 状态枚举常量
         private enum PRINT_STATE { PRINTING, SUSPENDED, STOPPED };
         private enum EJECT_STATE { INITIAL, EJECTED, INPOSITION };
         private enum CYCLE_STAGES { PRE, S1, S2, EXT };
+        // 状态变量
         private PRINT_STATE printState = PRINT_STATE.STOPPED;
         private EJECT_STATE ejectState = EJECT_STATE.INITIAL;
-
-        private const int ASCII_ZERO = 48;
-        public ManualResetEvent pauseEvent = new ManualResetEvent(true);
-        public ManualResetEvent stopEvent = new ManualResetEvent(true);
+        
+        // 对象变量
         public SerialPort spAirValve = new SerialPort();
         public SerialPort spHeater = new SerialPort();
         private Console console;
@@ -41,23 +49,19 @@ namespace PrinterPro
         private Stopwatch stopwatch = new Stopwatch();
         private Camera camera;
 
-        private float savedX = 0, savedY = 0;
-        private long timeUsed = 0;
-
-        private bool homeReady = false, fileReady = false, consoleReady = false;
-
+        // 线程控制变量
         private Thread threadPrint = null, threadConsole = null, threadFile = null;
         private Thread threadPositionMonitor = null, threadTemperatureMonitor = null;
         private Thread threadTemperatureController = null;
         private Thread threadCamera = null;
 
         private DateTime initialTime = DateTime.Now;
-        private double temperature = 0;
         #endregion
 
-        #region 窗口事件回调函数
+        #region 界面事件回调函数
+
         /// <summary>
-        /// 
+        /// 主窗口构造函数
         /// </summary>
         public MainForm()
         {
@@ -80,24 +84,22 @@ namespace PrinterPro
             togZAxis.Checked = PrinterPro.Properties.Settings.Default.Z_Enable;
         }
 
+        /// <summary>
+        /// 窗口加载完毕事件回调函数
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MainForm_Load(object sender, EventArgs e)
         {
-            refreshValvePort();
-            refreshHeaterPort();
-            refreshFrequency();
-
-            console = new Console(
-                PrinterPro.Properties.Settings.Default.X_Enable,
-                PrinterPro.Properties.Settings.Default.Y_Enable,
-                PrinterPro.Properties.Settings.Default.Z_Enable);
-
-            camera = new Camera(videoSourcePlayer);
-            camera.beginControl();
-
-            threadConsole = new Thread(init_Console);
-            threadConsole.Start();
+            initSurface();
+            initCamera();
+            initConsole();
         }
 
+        /// <summary>
+        /// 窗口关闭事件回调函数
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             try
@@ -105,9 +107,9 @@ namespace PrinterPro
                 if (spHeater.IsOpen)
                 {
                     spHeater.WriteLine("N1#100#1000#1000");
-                    spHeater.ReadLine();
+                    try { spHeater.ReadLine(); } catch { };
                     spHeater.WriteLine("B0");
-                    spHeater.ReadLine();
+                    try { spHeater.ReadLine(); } catch { };
                     spHeater.Close();
                 }
                 if (spAirValve.IsOpen) spAirValve.Close();
@@ -132,10 +134,23 @@ namespace PrinterPro
             // MessageBox.Show("Bye!");
         }
 
+        /// <summary>
+        /// 刷新界面元素（端口列表、波形预览等）
+        /// </summary>
+        private void initSurface()
+        {
+            refreshValvePort();
+            refreshHeaterPort();
+            refreshFrequency();
+        }
+
         #endregion
 
         #region 串口控制
 
+        /// <summary>
+        /// 连接气阀串口
+        /// </summary>
         private void connectValvePort()
         {
             spAirValve.PortName = comAirValve.SelectedValue.ToString();
@@ -161,6 +176,9 @@ namespace PrinterPro
             }
         }
 
+        /// <summary>
+        /// 连接加热板串口
+        /// </summary>
         private void connectHeaterPort()
         {
             spHeater.PortName = comHeaterPort.SelectedValue.ToString();
@@ -187,6 +205,9 @@ namespace PrinterPro
             }
         }
 
+        /// <summary>
+        /// 刷新气阀串口列表
+        /// </summary>
         private void refreshValvePort()
         {
             //进行绑定  
@@ -198,7 +219,7 @@ namespace PrinterPro
             comAirValve.DataSource = ports;
             foreach (DataRow row in ports.Rows)
             {
-                if (row[0].ToString().Contains("COM4"))
+                if (row[0].ToString().Contains(DEFAULT_AIR_COM))
                 {
                     comAirValve.SelectedIndex = ports.Rows.IndexOf(row);
                     connectValvePort();
@@ -206,6 +227,9 @@ namespace PrinterPro
             }
         }
 
+        /// <summary>
+        /// 刷新热板串口列表
+        /// </summary>
         private void refreshHeaterPort()
         {
             //进行绑定  
@@ -217,7 +241,7 @@ namespace PrinterPro
             comHeaterPort.DataSource = ports;
             foreach (DataRow row in ports.Rows)
             {
-                if (row[0].ToString().Contains("COM7"))
+                if (row[0].ToString().Contains(DEFAULT_HEAT_COM))
                 {
                     comHeaterPort.SelectedIndex = ports.Rows.IndexOf(row);
                     connectHeaterPort();
@@ -225,15 +249,35 @@ namespace PrinterPro
             }
         }
 
+        /// <summary>
+        /// 气阀串口列表点击响应事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void valvePort_Click(object sender, EventArgs e) { refreshValvePort(); }
 
+        /// <summary>
+       /// 热板串口列表点击响应事件
+       /// </summary>
+       /// <param name="sender"></param>
+       /// <param name="e"></param>
         private void heaterPort_Click(object sender, EventArgs e) { refreshHeaterPort(); }
 
+        /// <summary>
+        /// 气阀连接按键响应事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnConnectValvePort_Click(object sender, EventArgs e)
         {
             connectValvePort();
         }
 
+        /// <summary>
+        /// 热板连接按键响应事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnConnectHeaterPort_Click(object sender, EventArgs e)
         {
             connectHeaterPort();
@@ -243,6 +287,9 @@ namespace PrinterPro
 
         #region 文件操作函数
 
+        /// <summary>
+        /// 加载CSV文件，并显示在新的DataGrid上
+        /// </summary>
         private void loadFile()
         {
             if (fileLoader.loadCSV())
@@ -259,18 +306,33 @@ namespace PrinterPro
             }
         }
 
+        /// <summary>
+        /// 加载新的文件Mode
+        /// </summary>
         private void loadData()
         {
             Data.clear();
             Data.ExcelSafeFileName = cbMode.Text;
             Data.ExcelFileName = (string)cbMode.SelectedValue;
             loadFile();
-            //threadFile = new Thread(loadFile);
-            //threadFile.SetApartmentState(ApartmentState.STA);
-            //threadFile.Start();
         }
 
-        // Open File Button Clicked
+        /// <summary>
+        /// 增加文件按钮响应事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnAddMode_Click(object sender, EventArgs e)
+        {
+            AddMode am = new AddMode();
+            am.Show();
+        }
+
+        /// <summary>
+        /// 打开文件按钮响应事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnOpenFile_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -297,6 +359,11 @@ namespace PrinterPro
             threadFile.Start();
         }
 
+        /// <summary>
+        /// 修改文件按钮响应事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnModifyFile_Click(object sender, EventArgs e)
         {
             if (cbMode.SelectedValue != null)
@@ -306,6 +373,11 @@ namespace PrinterPro
             }
         }
 
+        /// <summary>
+        /// 删除文件按钮响应事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnDeleteMode_Click(object sender, EventArgs e)
         {
             if (Data.ExcelFileName != "")
@@ -329,17 +401,21 @@ namespace PrinterPro
             }
         }
 
-        private void btnAddMode_Click(object sender, EventArgs e)
-        {
-            AddMode am = new AddMode();
-            am.Show();
-        }
-
         #endregion
 
         #region 平移台控制
+        
+        private void initConsole()
+        {
+            console = new Console(
+                PrinterPro.Properties.Settings.Default.X_Enable,
+                PrinterPro.Properties.Settings.Default.Y_Enable,
+                PrinterPro.Properties.Settings.Default.Z_Enable);
+            threadConsole = new Thread(funcConsole);
+            threadConsole.Start();
+        }
 
-        private void init_Console()
+        private void funcConsole()
         {
             if (console.StartCtrl(true,
             (delegate
@@ -888,25 +964,37 @@ namespace PrinterPro
                     }
                     spHeater.WriteLine("t1");
                     string line = spHeater.ReadLine();
-                    temperature = Convert.ToDouble(Regex.Matches(line, @"\d*\.\d*")[0].ToString());
-                    System.Windows.Forms.DataVisualization.Charting.DataPointCollection points = chartTemperature.Series[0].Points;
-                    Invoke((EventHandler)(delegate
+                    MatchCollection result = Regex.Matches(line, @"\d*\.\d*");
+                    if (result.Count > 0)
                     {
-                        if (points.Count > 1000)
+                        temperature = Convert.ToDouble(result[0].ToString());
+                        System.Windows.Forms.DataVisualization.Charting.DataPointCollection pointsCurrent = chartTemperature.Series[0].Points;
+                        System.Windows.Forms.DataVisualization.Charting.DataPointCollection pointsTarget = chartTemperature.Series[1].Points;
+                        double time = Math.Round((double)(DateTime.Now - initialTime).TotalMilliseconds / 1000, 1);
+                        Invoke((EventHandler)(delegate
                         {
-                            points.RemoveAt(0);
-                            chartTemperature.Update();
-                        }
-                        points.AddXY(Math.Round((double)(DateTime.Now - initialTime).TotalMilliseconds / 1000, 1), temperature);
+                            if (pointsCurrent.Count > 1000)
+                            {
+                                pointsCurrent.RemoveAt(0);
+                                chartTemperature.Update();
+                            }
+                            pointsCurrent.AddXY(time, temperature);
+                            if (temperatureTarget != 0)
+                            {
+                                pointsTarget.AddXY(time, temperatureTarget);
+                            }
 
-                        double minY = points.FindMinByValue().YValues[0], maxY = points.FindMaxByValue().YValues[0];
-                        // +10 is to preserve a minimum range
-                        double range = maxY - minY + 10;
-                        chartTemperature.ChartAreas[0].AxisY.Minimum = minY - range * 0.2;
-                        chartTemperature.ChartAreas[0].AxisY.Maximum = maxY + range * 0.2;
+                            double minY = pointsCurrent.FindMinByValue().YValues[0];
+                            double maxY = temperatureTarget > pointsCurrent.FindMaxByValue().YValues[0] ? 
+                                          temperatureTarget : pointsCurrent.FindMaxByValue().YValues[0];
+                            // +10 is to preserve a minimum range
+                            double range = maxY - minY + 10;
+                            chartTemperature.ChartAreas[0].AxisY.Minimum = minY - range * 0.2;
+                            chartTemperature.ChartAreas[0].AxisY.Maximum = maxY + range * 0.2;
 
-                        lbTemp.Text = temperature.ToString();
-                    }));
+                            lbTemp.Text = temperature.ToString();
+                        }));
+                    }
                     int interval = Convert.ToInt32(trackTempUpdate.Maximum - trackTempUpdate.Value);
                     Thread.Sleep(interval);
                 }
@@ -937,6 +1025,8 @@ namespace PrinterPro
             CYCLE_STAGES stage = CYCLE_STAGES.PRE;
             int setTemp = 0, setCycles = 0;
             long startTime = 0, setTime = 0;
+            MetroFramework.Controls.MetroTextBox[] stagesTemp = { stage1_1_temp, stage1_2_temp, stage1_3_temp, stage2_1_temp, stage2_2_temp, stage2_3_temp };
+            MetroFramework.Controls.MetroTextBox[] stagesTime = { stage1_1_time, stage1_2_time, stage1_3_time, stage2_1_time, stage2_2_time, stage2_3_time };
 
             if (!spHeater.IsOpen)
             {
@@ -952,11 +1042,13 @@ namespace PrinterPro
                     switch (stage)
                     {
                         case CYCLE_STAGES.PRE:
+                            temperatureTarget = Convert.ToDouble(stagePRE_temp.Text);
                             tempCommander(stagePRE_time.Text, stagePRE_temp.Text);
                             stagePRE_time.BackColor = Color.PaleGreen;
                             stagePRE_temp.BackColor = Color.PaleGreen;
                             break;
                         case CYCLE_STAGES.EXT:
+                            temperatureTarget = Convert.ToDouble(stageEXT_temp.Text);
                             tempCommander(stageEXT_time.Text, stageEXT_temp.Text);
                             stageEXT_time.BackColor = Color.PaleGreen;
                             stageEXT_temp.BackColor = Color.PaleGreen;
@@ -966,15 +1058,13 @@ namespace PrinterPro
                             {
                                 for (int i = 0; i < Convert.ToInt32(stage1_cycles.Text); i++)
                                 {
-                                    tempCommander(stage1_1_time.Text, stage1_1_temp.Text);
-                                    stage1_1_time.BackColor = Color.PaleGreen;
-                                    stage1_1_temp.BackColor = Color.PaleGreen;
-                                    tempCommander(stage1_2_time.Text, stage1_2_temp.Text);
-                                    stage1_2_time.BackColor = Color.PaleGreen;
-                                    stage1_2_temp.BackColor = Color.PaleGreen;
-                                    tempCommander(stage1_3_time.Text, stage1_3_temp.Text);
-                                    stage1_3_time.BackColor = Color.PaleGreen;
-                                    stage1_3_temp.BackColor = Color.PaleGreen;
+                                    for (int step = 0; step < 3; step++)
+                                    {
+                                        temperatureTarget = Convert.ToDouble(stagesTemp[step].Text);
+                                        tempCommander(stagesTime[step].Text, stagesTemp[step].Text);
+                                        stagesTime[step].BackColor = Color.PaleGreen;
+                                        stagesTemp[step].BackColor = Color.PaleGreen;
+                                    }
                                 }
                                 stage1_cycles.BackColor = Color.PaleGreen;
                                 stage1_cycles.BackColor = Color.PaleGreen;
@@ -983,15 +1073,13 @@ namespace PrinterPro
                             {
                                 for (int i = 0; i < Convert.ToInt32(stage2_cycles.Text); i++)
                                 {
-                                    tempCommander(stage2_1_time.Text, stage2_1_temp.Text);
-                                    stage2_1_time.BackColor = Color.PaleGreen;
-                                    stage2_1_temp.BackColor = Color.PaleGreen;
-                                    tempCommander(stage2_2_time.Text, stage2_2_temp.Text);
-                                    stage2_2_time.BackColor = Color.PaleGreen;
-                                    stage2_2_temp.BackColor = Color.PaleGreen;
-                                    tempCommander(stage2_3_time.Text, stage2_3_temp.Text);
-                                    stage2_3_time.BackColor = Color.PaleGreen;
-                                    stage2_3_temp.BackColor = Color.PaleGreen;
+                                    for (int step = 3; step < 6; step++)
+                                    {
+                                        temperatureTarget = Convert.ToDouble(stagesTemp[step].Text);
+                                        tempCommander(stagesTime[step].Text, stagesTemp[step].Text);
+                                        stagesTime[step].BackColor = Color.PaleGreen;
+                                        stagesTemp[step].BackColor = Color.PaleGreen;
+                                    }
                                 }
                                 stage2_cycles.BackColor = Color.PaleGreen;
                                 stage2_cycles.BackColor = Color.PaleGreen;
@@ -1078,12 +1166,17 @@ namespace PrinterPro
 
         #region 相机控制
 
+        private void initCamera()
+        {
+            camera = new Camera(videoSourcePlayer);
+            camera.beginControl();
+        }
+
         private void btnCameraSettings_Click(object sender, EventArgs e)
         {
             camera.openSettings();
         }
 
         #endregion
-        
     }
 }

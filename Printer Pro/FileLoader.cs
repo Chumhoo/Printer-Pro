@@ -146,35 +146,5 @@ namespace PrinterPro
 
             return true;
         }
-
-        public void loadManual(int rows, int cols, int droplets)
-        {
-            Data.clear();
-     
-            Data.channelNumber = 1;
-            DataGrid[] dtArray = new DataGrid[Data.channelNumber];
-            ArrayList channelLoc = new ArrayList();
-
-            for (int i = 1; i <= Data.channelNumber; i++)
-            {
-                ArrayList pageData = new ArrayList();
-                channelLoc.Add(i);
-                Data.rows = rows;
-                Data.cols = cols;
-
-                for (int k = 0; k < Data.rows; k++)
-                {
-                    ArrayList row = new ArrayList();
-                    for (int j = 0; j < Data.cols; j++)
-                    {
-                        row.Add(droplets);
-                    }
-                    pageData.Add(row);
-                }
-                Data.gridData.Add(pageData);
-            }
-
-            Data.channel = (int[])channelLoc.ToArray(typeof(int));
-        }
     }
 }
