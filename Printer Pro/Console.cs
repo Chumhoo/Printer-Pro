@@ -4,14 +4,19 @@ using System.Threading;
 
 namespace PrinterPro
 {
+    /// <summary>
+    /// Thorlabs平移台API封装类
+    /// </summary>
     public partial class Console : MetroForm
     {
+        #region 私有变量
         private bool XHomeReady = false, YHomeReady = false, ZHomeReady = false;
         private EventHandler homeCompleteHandler;
         private float xMax = 0, yMax = 0;
         private bool XEnable, YEnable, ZEnable;
         private int plDirection = 0, plLimSwitch = 0;
         private float pfHomeVel = 0, pfZeroOffset = 0;
+        #endregion
 
         public Console(bool _XEnable, bool _YEnable, bool _ZEnable)
         {
@@ -21,6 +26,7 @@ namespace PrinterPro
             ZEnable = _ZEnable;
         }
 
+        #region 已封装的GET/SET函数
         public void setXEnabled(bool enabled) { XEnable = enabled; }
         public void setYEnabled(bool enabled) { YEnable = enabled; }
         public void setZEnabled(bool enabled) { ZEnable = enabled; }
@@ -45,23 +51,31 @@ namespace PrinterPro
         public void moveXRelative(bool wait) { if (XEnable) MotorX.MoveRelative(0, wait); }
         public void moveYRelative(bool wait) { if (YEnable) MotorY.MoveRelative(0, wait); }
         public void moveZRelative(bool wait) { if (ZEnable) MotorZ.MoveRelative(0, wait); }
+        #endregion
 
-
+        #region 开启/结束控制
+        /// <summary>
+        /// 开启平移台的控制
+        /// </summary>
+        /// <param name="autoHome"></param>
+        /// <param name="_homeCompleteHandler"></param>
+        /// <returns>True代表成功，False为失败</returns>
         public bool StartCtrl(bool autoHome, EventHandler _homeCompleteHandler)
         {
             try
             {
+                // 程序开始运行时，初始化通讯函数
                 MotorX.StartCtrl();
                 MotorY.StartCtrl();
                 MotorZ.StartCtrl();
-
+                // 获取平移台的最大运动范围
                 xMax = MotorX.GetStageAxisInfo_MaxPos(0);
                 yMax = MotorY.GetStageAxisInfo_MaxPos(0);
-
-                MotorX.EnableEventDlg(false);
-                MotorY.EnableEventDlg(false);
-                MotorZ.EnableEventDlg(false);
-
+                // 是否开启事件弹出对话框（如越界时）
+                MotorX.EnableEventDlg(true);
+                MotorY.EnableEventDlg(true);
+                MotorZ.EnableEventDlg(true);
+                // 自动复位
                 if (autoHome)
                 {
                     Thread.Sleep(100);
@@ -74,7 +88,9 @@ namespace PrinterPro
                 return false;
             }
         }
-
+        /// <summary>
+        /// 结束平移台控制
+        /// </summary>
         public void EndCtrl()
         {
             try
@@ -86,7 +102,9 @@ namespace PrinterPro
             catch
             {}
         }
+        #endregion
 
+        #region 复位函数
         public void MoveHome(EventHandler handler)
         {
             homeCompleteHandler = handler;
@@ -114,6 +132,7 @@ namespace PrinterPro
 
         public void moveZHome()
         {
+            // 该危险参数决定了Z轴复位时的方向，请理智思考后再改动！
             const int DANGER_PARAMETER = 2;
             MotorZ.HomeComplete += MotorZ_HomeComplete;
             setZVelParams(0, 10, 20);
@@ -124,7 +143,9 @@ namespace PrinterPro
             MotorZ.SetHomeParams(0, DANGER_PARAMETER, 1, 5, 0);
             MotorZ.MoveHome(0, false);
         }
+        #endregion
 
+        #region 复位成功回调函数
         private void MotorX_HomeComplete(object sender, AxMG17MotorLib._DMG17MotorEvents_HomeCompleteEvent e)
         {
             XHomeReady = true;
@@ -151,5 +172,6 @@ namespace PrinterPro
                 homeCompleteHandler.Invoke(sender, new EventArgs());
             }
         }
+        #endregion
     }
 }

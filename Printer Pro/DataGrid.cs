@@ -6,6 +6,9 @@ using MetroFramework.Controls;
 
 namespace PrinterPro
 {
+    /// <summary>
+    /// csv显示与编辑窗体类
+    /// </summary>
     public partial class DataGrid : MetroForm
     {
         public DataGrid()
@@ -13,6 +16,8 @@ namespace PrinterPro
             InitializeComponent();
         }
 
+        #region 刷新表格，加载数据
+        // 所有未在此文件中声明的变量（如grid,page,tcData)等，皆为界面元素变量
         public void refreshGrids()
         {
             Text = Data.ExcelSafeFileName;
@@ -43,7 +48,9 @@ namespace PrinterPro
                 tcData.TabPages.Add(page);
             }
         }
+        #endregion
 
+        #region 保存表格，修改csv文件
         public void saveGrid()
         {
             System.IO.FileStream fs = new System.IO.FileStream(Data.ExcelFileName,
@@ -80,6 +87,7 @@ namespace PrinterPro
             sr.Close();
             fs.Close();
         }
+        #endregion 
 
         private void btnSave_Click(object sender, System.EventArgs e)
         {

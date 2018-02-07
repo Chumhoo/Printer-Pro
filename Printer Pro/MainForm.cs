@@ -28,6 +28,7 @@ namespace PrinterPro
         private bool homeReady = false, fileReady = false, consoleReady = false;
         private float savedX = 0, savedY = 0;
         private double temperature = 0, temperatureTarget = 0;
+        private DateTime initialTime = DateTime.Now;
 
         // 状态枚举常量
         private enum PRINT_STATE { PRINTING, SUSPENDED, STOPPED };
@@ -55,7 +56,7 @@ namespace PrinterPro
         private Thread threadTemperatureController = null;
         private Thread threadCamera = null;
 
-        private DateTime initialTime = DateTime.Now;
+        
         #endregion
 
         #region 界面事件回调函数
@@ -67,21 +68,8 @@ namespace PrinterPro
         {
             InitializeComponent();
 
-            tabControl.SelectedIndex = 0;
-            cbFromCurrent.Visible = false;
-            btnOpenConsole.Enabled = false;
-            btnPrint.Enabled = false;
-            btnEject.Enabled = false;
-
             graphicsXYStage = panelXYStage.CreateGraphics();
             graphicsFrequency = panelFrequency.CreateGraphics();
-
-            cbPrintMode.SelectedIndex = Properties.Settings.Default.PrintMode;
-            cbChannel.SelectedIndex = 0;
-
-            togXAxis.Checked = PrinterPro.Properties.Settings.Default.X_Enable;
-            togYAxis.Checked = PrinterPro.Properties.Settings.Default.Y_Enable;
-            togZAxis.Checked = PrinterPro.Properties.Settings.Default.Z_Enable;
         }
 
         /// <summary>
@@ -91,6 +79,17 @@ namespace PrinterPro
         /// <param name="e"></param>
         private void MainForm_Load(object sender, EventArgs e)
         {
+            cbFromCurrent.Visible = false;
+            btnOpenConsole.Enabled = false;
+            btnPrint.Enabled = false;
+            btnEject.Enabled = false;
+            tabControl.SelectedIndex = 0;
+            cbPrintMode.SelectedIndex = Properties.Settings.Default.PrintMode;
+            cbChannel.SelectedIndex = Properties.Settings.Default.Channel;
+            togXAxis.Checked = PrinterPro.Properties.Settings.Default.X_Enable;
+            togYAxis.Checked = PrinterPro.Properties.Settings.Default.Y_Enable;
+            togZAxis.Checked = PrinterPro.Properties.Settings.Default.Z_Enable;
+
             initSurface();
             initCamera();
             initConsole();
@@ -104,12 +103,16 @@ namespace PrinterPro
         {
             try
             {
+                if (!spHeater.IsOpen)
+                {
+                    spHeater.Open();
+                }
                 if (spHeater.IsOpen)
                 {
                     spHeater.WriteLine("N1#100#1000#1000");
-                    try { spHeater.ReadLine(); } catch { };
+                    try { spHeater.ReadExisting(); } catch { };
                     spHeater.WriteLine("B0");
-                    try { spHeater.ReadLine(); } catch { };
+                    try { spHeater.ReadExisting(); } catch { };
                     spHeater.Close();
                 }
                 if (spAirValve.IsOpen) spAirValve.Close();
@@ -127,6 +130,10 @@ namespace PrinterPro
             if (threadCamera != null && threadCamera.IsAlive)
             {
                 threadCamera.Abort();
+            }
+            if (threadTemperatureController != null && threadTemperatureController.IsAlive)
+            {
+                threadTemperatureController.Abort();
             }
             console.EndCtrl();
             // stop current video source
@@ -195,7 +202,7 @@ namespace PrinterPro
                 buffer_init[0] = (byte)'w';
                 buffer_init[1] = (byte)'\r';
                 spHeater.Write(buffer_init, 0, 2);
-                spHeater.ReadLine();
+                spHeater.ReadExisting();
                 comHeaterPort.BackColor = Color.LightGreen;
                 spHeater.Close();
             }
@@ -602,6 +609,9 @@ namespace PrinterPro
 
         #region 打印控制
 
+        /// <summary>
+        /// 通过一些条件类判断是否应该启用打印按钮
+        /// </summary>
         private void enableBtnPrint()
         {
             btnPrint.Enabled = ((!homeReady && consoleReady) || (homeReady && fileReady)) && (btnEject.Text == "Eject");
@@ -610,6 +620,7 @@ namespace PrinterPro
         private void beginPrint()
         {
             int mode = 0;
+            // 编辑界面元素
             Invoke((EventHandler)(delegate
             {
                 mode = cbPrintMode.SelectedIndex;
@@ -662,14 +673,14 @@ namespace PrinterPro
             stopwatch.Start();
             printController.beginPrint(
                 mode,
-                (delegate
+                (delegate // 打印结束回调函数
                 {
                     Invoke((EventHandler)(delegate
                     {
                         stopPrint();
                     }));
                 }),
-                (delegate (object sender, EventArgs e)
+                (delegate (object sender, EventArgs e) // 打印一滴回调函数
                 {
                     int row = (int)((ArrayList)sender)[0];
                     int col = (int)((ArrayList)sender)[1];
@@ -784,28 +795,31 @@ namespace PrinterPro
 
         private void updatePreference()
         {
-            Data.xDistance = Convert.ToDouble(tbXDist.Text);
-            Data.yDistance = Convert.ToDouble(tbYDist.Text);
-            Data.xStart = Convert.ToDouble(tbXStart.Text);
-            Data.yStart = Convert.ToDouble(tbYStart.Text);
-            Data.idleSpeed = Convert.ToDouble(tbIdleSpeed.Text);
-            Data.waitTime = Convert.ToInt32(tbWaitTime.Text);
-            Data.xRelative = new double[Data.channelNumber];
-            Data.yRelative = new double[Data.channelNumber];
-            Data.frequency = new int[Data.channelNumber];
-            Data.pulsewidth = new int[Data.channelNumber];
-            Data.channel = new int[1];
-            Data.channel[0] = Convert.ToInt32(cbChannel.SelectedIndex) + 1;
-
-            for (int i = 0; i < Data.channelNumber; i++)
+            Invoke((EventHandler)(delegate
             {
-                Data.xRelative[i] = Convert.ToDouble(tbXRelative.Text);
-                Data.yRelative[i] = Convert.ToDouble(tbYRelative.Text);
-                Data.frequency[i] = Convert.ToInt32(tbFrequency.Text);
-                Data.pulsewidth[i] = Convert.ToInt32(tbPulseWidth.Text);
-            }
-            Data.workSpeed = (float)(Convert.ToDouble(tbFrequency.Text) * Convert.ToDouble(tbXDist.Text));
-            tbWorkSpeed.Text = Data.workSpeed.ToString();
+                Data.xDistance = Convert.ToDouble(tbXDist.Text);
+                Data.yDistance = Convert.ToDouble(tbYDist.Text);
+                Data.xStart = Convert.ToDouble(tbXStart.Text);
+                Data.yStart = Convert.ToDouble(tbYStart.Text);
+                Data.idleSpeed = Convert.ToDouble(tbIdleSpeed.Text);
+                Data.waitTime = Convert.ToInt32(tbWaitTime.Text);
+                Data.xRelative = new double[Data.channelNumber];
+                Data.yRelative = new double[Data.channelNumber];
+                Data.frequency = new int[Data.channelNumber];
+                Data.pulsewidth = new int[Data.channelNumber];
+                Data.channel = new int[1];
+                Data.channel[0] = Convert.ToInt32(cbChannel.SelectedIndex) + 1;
+
+                for (int i = 0; i < Data.channelNumber; i++)
+                {
+                    Data.xRelative[i] = Convert.ToDouble(tbXRelative.Text);
+                    Data.yRelative[i] = Convert.ToDouble(tbYRelative.Text);
+                    Data.frequency[i] = Convert.ToInt32(tbFrequency.Text);
+                    Data.pulsewidth[i] = Convert.ToInt32(tbPulseWidth.Text);
+                }
+                Data.workSpeed = (float)(Convert.ToDouble(tbFrequency.Text) * Convert.ToDouble(tbXDist.Text));
+                tbWorkSpeed.Text = Data.workSpeed.ToString();
+            }));
         }
 
         private void cbChannel_SelectedIndexChanged(object sender, EventArgs e)
@@ -962,10 +976,11 @@ namespace PrinterPro
                     {
                         spHeater.Open();
                     }
-                    spHeater.WriteLine("t1");
-                    string line = spHeater.ReadLine();
+                    spHeater.WriteLine("t1t2t3t4");
+                    string line = spHeater.ReadExisting();
                     MatchCollection result = Regex.Matches(line, @"\d*\.\d*");
-                    if (result.Count > 0)
+                    
+                    if (result.Count > 3)
                     {
                         temperature = Convert.ToDouble(result[0].ToString());
                         System.Windows.Forms.DataVisualization.Charting.DataPointCollection pointsCurrent = chartTemperature.Series[0].Points;
@@ -978,7 +993,7 @@ namespace PrinterPro
                                 pointsCurrent.RemoveAt(0);
                                 chartTemperature.Update();
                             }
-                            pointsCurrent.AddXY(time, temperature);
+                            pointsCurrent.AddXY(time, Math.Round(temperature, 2));
                             if (temperatureTarget != 0)
                             {
                                 pointsTarget.AddXY(time, temperatureTarget);
@@ -992,7 +1007,10 @@ namespace PrinterPro
                             chartTemperature.ChartAreas[0].AxisY.Minimum = minY - range * 0.2;
                             chartTemperature.ChartAreas[0].AxisY.Maximum = maxY + range * 0.2;
 
-                            lbTemp.Text = temperature.ToString();
+                            lbTemp1.Text = temperature.ToString();
+                            lbTemp2.Text = result[1].ToString();
+                            lbTemp3.Text = result[2].ToString();
+                            lbTemp4.Text = result[3].ToString();
                         }));
                     }
                     int interval = Convert.ToInt32(trackTempUpdate.Maximum - trackTempUpdate.Value);
@@ -1012,9 +1030,9 @@ namespace PrinterPro
             int setTemp = Convert.ToInt32(setTemp_str);
 
             spHeater.WriteLine("H" + setTime.ToString());
-            spHeater.ReadLine();
+            spHeater.ReadExisting();
             spHeater.WriteLine("S" + setTemp.ToString());
-            spHeater.ReadLine();
+            spHeater.ReadExisting();
             while (Math.Abs(temperature - setTemp) > 1) { }
             DateTime startTime = DateTime.Now;
             while ((DateTime.Now - startTime).TotalMilliseconds / 1000 <= setTime) { }
@@ -1036,7 +1054,7 @@ namespace PrinterPro
             {
                 // 初始化设置
                 spHeater.WriteLine("N1#255#1000#600");
-                spHeater.ReadLine();
+                spHeater.ReadExisting();
                 while (stage <= CYCLE_STAGES.EXT)
                 {
                     switch (stage)
@@ -1093,24 +1111,28 @@ namespace PrinterPro
             catch { }
             finally
             {
-                if (!spHeater.IsOpen)
+                try
                 {
-                    spHeater.Open();
+                    if (!spHeater.IsOpen)
+                    {
+                        spHeater.Open();
+                    }
+                    spHeater.WriteLine("N1#100#1000#1000");
+                    spHeater.ReadExisting();
+                    spHeater.WriteLine("B0");
+                    spHeater.ReadExisting();
+                    stagePRE_time.BackColor = Color.White; stagePRE_temp.BackColor = Color.White;
+                    stageEXT_time.BackColor = Color.White; stageEXT_temp.BackColor = Color.White;
+                    stage1_1_time.BackColor = Color.White; stage1_1_temp.BackColor = Color.White;
+                    stage1_2_time.BackColor = Color.White; stage1_2_temp.BackColor = Color.White;
+                    stage1_3_time.BackColor = Color.White; stage1_3_temp.BackColor = Color.White;
+                    stage2_1_time.BackColor = Color.White; stage2_1_temp.BackColor = Color.White;
+                    stage2_2_time.BackColor = Color.White; stage2_2_temp.BackColor = Color.White;
+                    stage2_3_time.BackColor = Color.White; stage2_3_temp.BackColor = Color.White;
+                    stage1_cycles.BackColor = Color.White; stage1_cycles.BackColor = Color.White;
+                    stage2_cycles.BackColor = Color.White; stage2_cycles.BackColor = Color.White;
                 }
-                spHeater.WriteLine("N1#100#1000#1000");
-                spHeater.ReadLine();
-                spHeater.WriteLine("B0");
-                spHeater.ReadLine();
-                stagePRE_time.BackColor = Color.White; stagePRE_temp.BackColor = Color.White;
-                stageEXT_time.BackColor = Color.White; stageEXT_temp.BackColor = Color.White;
-                stage1_1_time.BackColor = Color.White; stage1_1_temp.BackColor = Color.White;
-                stage1_2_time.BackColor = Color.White; stage1_2_temp.BackColor = Color.White;
-                stage1_3_time.BackColor = Color.White; stage1_3_temp.BackColor = Color.White;
-                stage2_1_time.BackColor = Color.White; stage2_1_temp.BackColor = Color.White;
-                stage2_2_time.BackColor = Color.White; stage2_2_temp.BackColor = Color.White;
-                stage2_3_time.BackColor = Color.White; stage2_3_temp.BackColor = Color.White;
-                stage1_cycles.BackColor = Color.White; stage1_cycles.BackColor = Color.White;
-                stage2_cycles.BackColor = Color.White; stage2_cycles.BackColor = Color.White;
+                catch { }
             }
         }
 
@@ -1120,6 +1142,7 @@ namespace PrinterPro
             {
                 btnRunCycle.Text = "Run Cycles";
                 threadTemperatureController.Abort();
+                temperatureTarget = 0;
             }
             else
             {

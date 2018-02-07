@@ -5,18 +5,30 @@ using System.Threading;
 
 namespace PrinterPro
 {
+    /// <summary>
+    /// 打印逻辑控制类
+    /// </summary>
     class PrintController
     {
+        #region 参数变量
         private const int ASCII_ZERO = 48;
-        private Console console;
-        private SerialPort valve;
-
+        private const float Z_MAX = (float)92;
+        private const int HARD_WAIT_TIME = 300;
         private float xMidRange, yMidRange;
         private static float lastX, lastY;
         private static bool initialInPosition = true;
+        #endregion
 
-        private const float Z_MAX = (float)92;
+        #region 数值变量
+        private Console console;
+        private SerialPort valve;
+        #endregion
 
+        /// <summary>
+        /// 初始化
+        /// </summary>
+        /// <param name="console"></param>
+        /// <param name="valve"></param>
         public PrintController(Console console, SerialPort valve)
         {
             this.console = console;
@@ -26,6 +38,11 @@ namespace PrinterPro
             yMidRange = console.getYAxisMax() / 2;
         }
 
+        #region 平移台运动控制
+
+        /// <summary>
+        /// 平移台弹出控制
+        /// </summary>
         public void eject()
         {
             console.getXPosition(ref lastX);
@@ -66,14 +83,29 @@ namespace PrinterPro
             console.setZAbsMovePos(Z_MAX);
             console.moveZAbsolute(true);
         }
+        
+        #endregion
 
+        #region 打印控制
+
+        /// <summary>
+        /// 打印控制主入口
+        /// </summary>
+        /// <param name="mode"></param>
+        /// <param name="finishPrintEventHandler">结束打印回调函数</param>
+        /// <param name="eventFinish1Point">打印每滴回调函数</param>
         public void beginPrint(int mode, EventHandler finishPrintEventHandler, EventHandler eventFinish1Point)
         {
             if (mode == 0) beginInkjet(finishPrintEventHandler, eventFinish1Point);
             else if (mode == 1) beginOnTheFLy(finishPrintEventHandler, eventFinish1Point);
         }
 
-        public void beginOnTheFLy(EventHandler finishPrintEventHandler, EventHandler eventFinish1Point)
+        /// <summary>
+        /// 开启On the fly（持续）模式打印
+        /// </summary>
+        /// <param name="finishPrintEventHandler">结束打印回调函数</param>
+        /// <param name="eventFinish1Point">完成1滴会地哦啊函数</param>
+        private void beginOnTheFLy(EventHandler finishPrintEventHandler, EventHandler eventFinish1Point)
         {
             try
             {
@@ -112,6 +144,7 @@ namespace PrinterPro
                     console.setYRelMoveDist(-(float)Data.yDistance);
                     console.moveYRelative(true);
                 }
+                // 发送数据
                 byte[] buffer = new byte[4];
                 buffer[0] = (byte)(ASCII_ZERO + Data.channel[0]);       // Channel ID
                 buffer[1] = (byte)(ASCII_ZERO + Data.frequency[0]);     // Frequency
@@ -136,7 +169,9 @@ namespace PrinterPro
                     console.setXAbsMovePos((float)xStart - accnBufferDistance);
                     console.moveXAbsolute(false);
                 }
+                // 等待加速缓冲区的时间
                 Thread.Sleep((int)accnBufferTime);
+                // 串口通讯，开始打印
                 valve.Write(buffer, 0, 4);
                 direction = !direction;
 
@@ -154,15 +189,21 @@ namespace PrinterPro
                     args.Add(col);
                     eventFinish1Point.Invoke(args, EventArgs.Empty);
                 }
+                // 等待剩余时间
                 // The following sleeping time saves the life of out-of-thread X Axis control. Without this compulsory
                 // delay, next absolute move will probably be omitted.
-                Thread.Sleep((int)(Data.xDistance * Data.cols / Data.workSpeed) * 1000 + (int)accnBufferTime + 300);
+                Thread.Sleep((int)(Data.xDistance * Data.cols / Data.workSpeed) * 1000 + (int)accnBufferTime + HARD_WAIT_TIME);
                 Thread.Sleep(Data.waitTime);
             }
             finishPrintEventHandler.Invoke(new object(), new EventArgs());
         }
 
-        public void beginInkjet(EventHandler finishPrintEventHandler, EventHandler eventFinish1Point)
+        /// <summary>
+        /// 开启Inkjet（单个液滴）模式打印
+        /// </summary>
+        /// <param name="finishPrintEventHandler"></param>
+        /// <param name="eventFinish1Point"></param>
+        private void beginInkjet(EventHandler finishPrintEventHandler, EventHandler eventFinish1Point)
         {
             #region check valve port and send a message to active the port
             try
@@ -179,8 +220,11 @@ namespace PrinterPro
 
             #endregion
 
+            #region 变量声明
             double xStart = Data.xStart, yStart = Data.yStart;
             int arraySize = Data.cols * Data.rows;
+            #endregion
+
             #region Inkjet printing
 
             if (Data.selectedStyle == 0)
@@ -241,6 +285,7 @@ namespace PrinterPro
                                         buffer[3] = (byte)(ASCII_ZERO + Data.pulsewidth[channel]);
                                         valve.Write(buffer, 0, 4);
 
+                                        // 等待电路板回复
                                         byte[] buffer_receive = new byte[1];
                                         while (buffer_receive[0] != (byte)'0')
                                         {
@@ -287,5 +332,7 @@ namespace PrinterPro
             console.MotorY.StopImmediate(0);
             console.MotorZ.StopImmediate(0);
         }
+        
+        #endregion
     }
 }

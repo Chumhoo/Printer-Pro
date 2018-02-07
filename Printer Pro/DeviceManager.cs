@@ -4,7 +4,9 @@ using System.Text.RegularExpressions;
 
 namespace PrinterPro
 {
-
+    /// <summary>
+    /// 本机固件设备扫描类
+    /// </summary>
     class DeviceManager
     {
         /// <summary>

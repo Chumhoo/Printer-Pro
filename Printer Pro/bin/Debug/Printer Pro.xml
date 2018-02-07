@@ -4,6 +4,11 @@
         <name>Printer Pro</name>
     </assembly>
     <members>
+        <member name="T:PrinterPro.AddMode">
+            <summary>
+            快捷添加新csv文件窗体类
+            </summary>
+        </member>
         <member name="F:PrinterPro.AddMode.components">
             <summary>
             Required designer variable.
@@ -19,6 +24,29 @@
             <summary>
             Required method for Designer support - do not modify
             the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:PrinterPro.Camera">
+            <summary>
+            相机控制类
+            </summary>
+        </member>
+        <member name="T:PrinterPro.Console">
+            <summary>
+            Thorlabs平移台API封装类
+            </summary>
+        </member>
+        <member name="M:PrinterPro.Console.StartCtrl(System.Boolean,System.EventHandler)">
+            <summary>
+            开启平移台的控制
+            </summary>
+            <param name="autoHome"></param>
+            <param name="_homeCompleteHandler"></param>
+            <returns>True代表成功，False为失败</returns>
+        </member>
+        <member name="M:PrinterPro.Console.EndCtrl">
+            <summary>
+            结束平移台控制
             </summary>
         </member>
         <member name="F:PrinterPro.Console.components">
@@ -38,6 +66,21 @@
             the contents of this method with the code editor.
             </summary>
         </member>
+        <member name="T:PrinterPro.Data">
+            <summary>
+            数据存储静态类
+            </summary>
+        </member>
+        <member name="M:PrinterPro.Data.clear">
+            <summary>
+            刷新并清空所有数据存储变量
+            </summary>
+        </member>
+        <member name="T:PrinterPro.DataGrid">
+            <summary>
+            csv显示与编辑窗体类
+            </summary>
+        </member>
         <member name="F:PrinterPro.DataGrid.components">
             <summary>
             Required designer variable.
@@ -55,6 +98,11 @@
             the contents of this method with the code editor.
             </summary>
         </member>
+        <member name="T:PrinterPro.DeviceManager">
+            <summary>
+            本机固件设备扫描类
+            </summary>
+        </member>
         <member name="T:PrinterPro.DeviceManager.HardwareEnum">
             <summary>
             枚举win32 api
@@ -66,6 +114,33 @@
             </summary>
             <param name="hardType"></param>
             <param name="propKey"></param>
+            <returns></returns>
+        </member>
+        <member name="T:PrinterPro.FileLoader">
+            <summary>
+            文件读取类
+            </summary>
+        </member>
+        <member name="M:PrinterPro.FileLoader.loadCSV">
+            <summary>
+            读取CSV文件
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PrinterPro.FileLoader.saveCSV(System.String,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            保存CSV文件
+            </summary>
+            <param name="fileName">文件名</param>
+            <param name="rows">行数</param>
+            <param name="cols">列数</param>
+            <param name="countPerDrop">每个点的液滴数</param>
+            <returns></returns>
+        </member>
+        <member name="M:PrinterPro.FileLoader.loadFile">
+            <summary>
+            已弃用的文件读取类！（2018.2）现采用loadCSV
+            </summary>
             <returns></returns>
         </member>
         <member name="T:PrinterPro.MainForm">
@@ -182,6 +257,11 @@
             <param name="sender"></param>
             <param name="e"></param>
         </member>
+        <member name="M:PrinterPro.MainForm.enableBtnPrint">
+            <summary>
+            通过一些条件类判断是否应该启用打印按钮
+            </summary>
+        </member>
         <member name="F:PrinterPro.MainForm.components">
             <summary>
             Required designer variable.
@@ -198,6 +278,45 @@
             Required method for Designer support - do not modify
             the contents of this method with the code editor.
             </summary>
+        </member>
+        <member name="T:PrinterPro.PrintController">
+            <summary>
+            打印逻辑控制类
+            </summary>
+        </member>
+        <member name="M:PrinterPro.PrintController.#ctor(PrinterPro.Console,System.IO.Ports.SerialPort)">
+            <summary>
+            初始化
+            </summary>
+            <param name="console"></param>
+            <param name="valve"></param>
+        </member>
+        <member name="M:PrinterPro.PrintController.eject">
+            <summary>
+            平移台弹出控制
+            </summary>
+        </member>
+        <member name="M:PrinterPro.PrintController.beginPrint(System.Int32,System.EventHandler,System.EventHandler)">
+            <summary>
+            打印控制主入口
+            </summary>
+            <param name="mode"></param>
+            <param name="finishPrintEventHandler">结束打印回调函数</param>
+            <param name="eventFinish1Point">打印每滴回调函数</param>
+        </member>
+        <member name="M:PrinterPro.PrintController.beginOnTheFLy(System.EventHandler,System.EventHandler)">
+            <summary>
+            开启On the fly（持续）模式打印
+            </summary>
+            <param name="finishPrintEventHandler">结束打印回调函数</param>
+            <param name="eventFinish1Point">完成1滴会地哦啊函数</param>
+        </member>
+        <member name="M:PrinterPro.PrintController.beginInkjet(System.EventHandler,System.EventHandler)">
+            <summary>
+            开启Inkjet（单个液滴）模式打印
+            </summary>
+            <param name="finishPrintEventHandler"></param>
+            <param name="eventFinish1Point"></param>
         </member>
         <member name="M:PrinterPro.Program.Main">
             <summary>
